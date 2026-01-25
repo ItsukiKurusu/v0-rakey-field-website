@@ -485,6 +485,17 @@ function ServicesSection() {
     <section id="services" className="py-20 md:py-32 bg-secondary">
       <div className="container mx-auto px-4">
         <FadeInUp>
+          <div className="text-center mb-16">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-4">
+              おまかせください！
+            </h1>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-primary mb-8">
+              お電話１本ですべてOKです！
+            </h1>
+          </div>
+        </FadeInUp>
+
+        <FadeInUp delay={0.2}>
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">サービス</h2>
             <p className="text-lg text-muted-foreground">車のことならなんでも承る</p>
