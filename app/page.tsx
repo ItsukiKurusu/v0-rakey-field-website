@@ -547,6 +547,15 @@ function GallerySection() {
     setCurrentIndex((prev) => (prev + 1) % galleryItems.length)
   }
 
+  // Get 3 visible items
+  const getVisibleItems = () => {
+    return [
+      galleryItems[currentIndex],
+      galleryItems[(currentIndex + 1) % galleryItems.length],
+      galleryItems[(currentIndex + 2) % galleryItems.length],
+    ]
+  }
+
   return (
     <section className="py-20 md:py-32 bg-background">
       <div className="container mx-auto px-4">
@@ -556,78 +565,69 @@ function GallerySection() {
           </h2>
         </FadeInUp>
 
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-7xl mx-auto">
           <FadeInUp delay={0.1}>
-            <div className="relative rounded-2xl overflow-hidden shadow-lg bg-card">
-              {/* Image Container */}
-              <div className="relative h-96 md:h-[500px] bg-muted flex items-center justify-center overflow-hidden">
-                <AnimatePresence mode="wait">
+            <div className="relative">
+              {/* Navigation Buttons */}
+              <button
+                onClick={handlePrev}
+                className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-14 z-10 p-3 rounded-full bg-primary hover:bg-primary/90 text-background transition-colors"
+                aria-label="前の画像"
+              >
+                <ChevronLeft className="h-6 w-6" />
+              </button>
+
+              {/* Images Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 px-4">
+                {getVisibleItems().map((item, index) => (
                   <motion.div
-                    key={currentIndex}
-                    className="absolute inset-0"
-                    initial={{ opacity: 0, x: 100 }}
+                    key={`${currentIndex}-${index}`}
+                    className="relative rounded-2xl overflow-hidden shadow-lg bg-card h-72 md:h-80"
+                    initial={{ opacity: 0, x: 50 }}
                     animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -100 }}
-                    transition={{ duration: 0.5 }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
                   >
                     <img
-                      src={galleryItems[currentIndex].image}
-                      alt={galleryItems[currentIndex].caption}
+                      src={item.image}
+                      alt={item.caption}
                       className="w-full h-full object-cover"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-foreground/20 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-foreground/60 via-transparent to-transparent" />
+                    
+                    {/* Caption Overlay */}
+                    <div className="absolute bottom-0 left-0 right-0 p-4">
+                      <p className="text-sm font-semibold text-background">
+                        {item.caption}
+                      </p>
+                    </div>
                   </motion.div>
-                </AnimatePresence>
-
-                {/* Navigation Buttons */}
-                <button
-                  onClick={handlePrev}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-background/80 hover:bg-background text-foreground transition-colors"
-                  aria-label="前の画像"
-                >
-                  <ChevronLeft className="h-6 w-6" />
-                </button>
-                <button
-                  onClick={handleNext}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-background/80 hover:bg-background text-foreground transition-colors"
-                  aria-label="次の画像"
-                >
-                  <ChevronRight className="h-6 w-6" />
-                </button>
-              </div>
-
-              {/* Caption and Counter */}
-              <div className="p-6 border-t border-border">
-                <motion.div
-                  key={currentIndex}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <p className="text-lg font-semibold text-foreground mb-3">
-                    {galleryItems[currentIndex].caption}
-                  </p>
-                </motion.div>
-                <p className="text-sm text-muted-foreground">
-                  {currentIndex + 1} / {galleryItems.length}
-                </p>
-              </div>
-
-              {/* Dot Indicators */}
-              <div className="flex justify-center gap-2 pb-6 px-6">
-                {galleryItems.map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setCurrentIndex(index)}
-                    className={`h-2 rounded-full transition-all duration-300 ${
-                      index === currentIndex
-                        ? "bg-primary w-6"
-                        : "bg-border w-2 hover:bg-primary/50"
-                    }`}
-                    aria-label={`画像 ${index + 1} に移動`}
-                  />
                 ))}
               </div>
+
+              {/* Navigation Buttons */}
+              <button
+                onClick={handleNext}
+                className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-14 z-10 p-3 rounded-full bg-primary hover:bg-primary/90 text-background transition-colors"
+                aria-label="次の画像"
+              >
+                <ChevronRight className="h-6 w-6" />
+              </button>
+            </div>
+
+            {/* Dot Indicators */}
+            <div className="flex justify-center gap-2 mt-8">
+              {galleryItems.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentIndex(index)}
+                  className={`h-2 rounded-full transition-all duration-300 ${
+                    index === currentIndex
+                      ? "bg-primary w-6"
+                      : "bg-border w-2 hover:bg-primary/50"
+                  }`}
+                  aria-label={`画像 ${index + 1} に移動`}
+                />
+              ))}
             </div>
           </FadeInUp>
         </div>
