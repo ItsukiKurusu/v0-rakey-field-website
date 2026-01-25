@@ -1,0 +1,21 @@
+{
+  "name": "RAKEY FIELD | 堺市中区陶器の地域密着カーライフサポート",
+  "short_name": "RAKEY FIELD",
+  "description": "この地域の人々のカーライフを一生涯サポートする。自動車買取・販売、レンタカー、メンテナンス、車検、板金、保険まで車のことならなんでも承ります。",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f9f6f3",
+  "theme_color": "#8B4513",
+  "icons": [
+    {
+      "src": "/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
