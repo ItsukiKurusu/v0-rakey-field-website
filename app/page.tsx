@@ -398,7 +398,7 @@ function ConceptSection() {
           <FadeInUp delay={0.2}>
             <div className="space-y-6">
               <p className="text-lg md:text-xl text-muted-foreground leading-relaxed text-pretty">
-                この地域（「堺市中区」「陶器」、福田」）の人々のカーライフを一生涯サポートする。
+                この地域（「堺市中区」「陶器」、「福田」）の人々のカーライフを一生涯サポートする。
               </p>
               <p className="text-lg md:text-xl text-muted-foreground leading-relaxed text-pretty">
                 子どもたちが集い、遊び、大人になって車を買う、そして車の相談で立ち寄る。
@@ -450,6 +450,20 @@ function OriginSection() {
                 ))}
               </ul>
             </div>
+            <FadeInUp delay={0.6}>
+              <div className="mt-8 max-w-md mx-auto">
+                <div className="relative rounded-2xl overflow-hidden shadow-lg bg-background/95 p-6">
+                  <img
+                    src="/images/logo-raw.jpg"
+                    alt="RAKEY FIELD ロゴ"
+                    className="w-full h-auto object-contain"
+                  />
+                  <p className="text-center text-sm text-muted-foreground mt-4">
+                    子どもたちが作ったオリジナルロゴ
+                  </p>
+                </div>
+              </div>
+            </FadeInUp>
           </div>
         </div>
       </section>
