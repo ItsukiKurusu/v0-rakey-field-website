@@ -4,7 +4,7 @@ import React from "react"
 
 import { useState, useEffect, useRef } from "react"
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion"
-import { Menu, X, Phone, Mail, MapPin, Clock, Car, Key, Wrench, Shield, Package, ChevronDown } from "lucide-react"
+import { Menu, X, Phone, Mail, MapPin, Clock, Car, Key, Wrench, Shield, Package, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -524,6 +524,118 @@ function ServicesSection() {
   )
 }
 
+// Gallery Section
+function GallerySection() {
+  const galleryItems = [
+    { image: "/images/comics.jpg", caption: "アメリカの雑誌" },
+    { image: "/images/garage-soto-hiki.jpg", caption: "ガレージの外観①" },
+    { image: "/images/garage-soto.jpg", caption: "ガレージの外観②" },
+    { image: "/images/garage.jpg", caption: "アメリカ雑貨コレクション" },
+    { image: "/images/garage2-tate.jpg", caption: "アメリカ雑貨コレクション" },
+    { image: "/images/Hot Wheels.jpg", caption: "Hot Wheelsのコレクション" },
+    { image: "/images/impala.jpg", caption: "オーナーの愛車" },
+    { image: "/images/impala-mae.JPG", caption: "オーナーの愛車" },
+  ]
+
+  const [currentIndex, setCurrentIndex] = useState(0)
+
+  const handlePrev = () => {
+    setCurrentIndex((prev) => (prev - 1 + galleryItems.length) % galleryItems.length)
+  }
+
+  const handleNext = () => {
+    setCurrentIndex((prev) => (prev + 1) % galleryItems.length)
+  }
+
+  return (
+    <section className="py-20 md:py-32 bg-background">
+      <div className="container mx-auto px-4">
+        <FadeInUp>
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground text-center mb-12">
+            ギャラリー
+          </h2>
+        </FadeInUp>
+
+        <div className="max-w-5xl mx-auto">
+          <FadeInUp delay={0.1}>
+            <div className="relative rounded-2xl overflow-hidden shadow-lg bg-card">
+              {/* Image Container */}
+              <div className="relative h-96 md:h-[500px] bg-muted flex items-center justify-center overflow-hidden">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={currentIndex}
+                    className="absolute inset-0"
+                    initial={{ opacity: 0, x: 100 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -100 }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    <img
+                      src={galleryItems[currentIndex].image}
+                      alt={galleryItems[currentIndex].caption}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-foreground/20 to-transparent" />
+                  </motion.div>
+                </AnimatePresence>
+
+                {/* Navigation Buttons */}
+                <button
+                  onClick={handlePrev}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-background/80 hover:bg-background text-foreground transition-colors"
+                  aria-label="前の画像"
+                >
+                  <ChevronLeft className="h-6 w-6" />
+                </button>
+                <button
+                  onClick={handleNext}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-background/80 hover:bg-background text-foreground transition-colors"
+                  aria-label="次の画像"
+                >
+                  <ChevronRight className="h-6 w-6" />
+                </button>
+              </div>
+
+              {/* Caption and Counter */}
+              <div className="p-6 border-t border-border">
+                <motion.div
+                  key={currentIndex}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <p className="text-lg font-semibold text-foreground mb-3">
+                    {galleryItems[currentIndex].caption}
+                  </p>
+                </motion.div>
+                <p className="text-sm text-muted-foreground">
+                  {currentIndex + 1} / {galleryItems.length}
+                </p>
+              </div>
+
+              {/* Dot Indicators */}
+              <div className="flex justify-center gap-2 pb-6 px-6">
+                {galleryItems.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentIndex(index)}
+                    className={`h-2 rounded-full transition-all duration-300 ${
+                      index === currentIndex
+                        ? "bg-primary w-6"
+                        : "bg-border w-2 hover:bg-primary/50"
+                    }`}
+                    aria-label={`画像 ${index + 1} に移動`}
+                  />
+                ))}
+              </div>
+            </div>
+          </FadeInUp>
+        </div>
+      </div>
+    </section>
+  )
+}
+
 // Company Info Section
 function CompanySection() {
   const qualifications = [
@@ -733,6 +845,7 @@ export default function Home() {
           <ConceptSection />
           <OriginSection />
           <ServicesSection />
+          <GallerySection />
           <CompanySection />
           <ContactSection />
           <Footer />
