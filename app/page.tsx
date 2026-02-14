@@ -293,7 +293,7 @@ function HeroSlider() {
             RAKEY FIELD
           </h1>
           <p className="text-lg md:text-xl text-background/90 max-w-2xl mx-auto leading-relaxed text-balance">
-            この地域の人々のカーライフを一生涯サポートする
+            地域の人々のカーライフを一生涯サポートする
           </p>
         </motion.div>
       </div>
@@ -475,7 +475,7 @@ function OriginSection() {
 function ServicesSection() {
   const services = [
     { icon: Car, title: "自動車 買取/販売", description: "新車・中古車の買取から販売まで幅広く対応いたします。" },
-    { icon: Key, title: "レンタカー", description: "必要な時に、必要な車を。短期から長期まで柔軟に対応。" },
+    { icon: Key, title: "レンタカー", description: "必要な時に、必要な車を。短期から長期まで柔軟に対応いたします。" },
     { icon: Package, title: "アンティーク雑貨 輸入販売", description: "アメリカンヴィンテージを中心とした雑貨を取り揃えています。" },
     { icon: Wrench, title: "メンテナンス・車検・板金", description: "定期点検から車検、板金修理まで、お車のメンテナンスはお任せください。" },
     { icon: Shield, title: "生命保険・損害保険", description: "お車と一緒に、保険のご相談も承ります。" },
@@ -498,7 +498,7 @@ function ServicesSection() {
         <FadeInUp delay={0.2}>
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">サービス</h2>
-            <p className="text-lg text-muted-foreground">車のことならなんでも承る</p>
+            <p className="text-lg text-muted-foreground">車のことならなんでも承ります。</p>
           </div>
         </FadeInUp>
 
@@ -527,14 +527,14 @@ function ServicesSection() {
 // Gallery Section
 function GallerySection() {
   const galleryItems = [
-    { image: "/images/comics.jpg", caption: "アメリカの雑誌" },
+    { image: "/images/comics.jpg", caption: "" },
     { image: "/images/garage-soto-hiki.jpg", caption: "ガレージの外観①" },
     { image: "/images/garage-soto.jpg", caption: "ガレージの外観②" },
     { image: "/images/garage.jpg", caption: "アメリカ雑貨コレクション" },
     { image: "/images/garage2-tate.jpg", caption: "アメリカ雑貨コレクション" },
     { image: "/images/Hot Wheels.jpg", caption: "Hot Wheelsのコレクション" },
-    { image: "/images/impala.jpg", caption: "オーナーの愛車" },
-    { image: "/images/impala-mae.JPG", caption: "オーナーの愛車" },
+    { image: "/images/impala.jpg", caption: "" },
+    { image: "/images/impala-mae.JPG", caption: "" },
   ]
 
   const [currentIndex, setCurrentIndex] = useState(0)
