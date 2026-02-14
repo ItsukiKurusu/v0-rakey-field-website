@@ -528,11 +528,11 @@ function ServicesSection() {
 function GallerySection() {
   const galleryItems = [
     { image: "/images/comics.jpg", caption: "" },
-    { image: "/images/garage-soto-hiki.jpg", caption: "ガレージの外観①" },
-    { image: "/images/garage-soto.jpg", caption: "ガレージの外観②" },
-    { image: "/images/garage.jpg", caption: "アメリカ雑貨コレクション" },
-    { image: "/images/garage2-tate.jpg", caption: "アメリカ雑貨コレクション" },
-    { image: "/images/Hot Wheels.jpg", caption: "Hot Wheelsのコレクション" },
+    { image: "/images/garage-soto-hiki.jpg", caption: "" },
+    { image: "/images/garage-soto.jpg", caption: "" },
+    { image: "/images/garage.jpg", caption: "" },
+    { image: "/images/garage2-tate.jpg", caption: "" },
+    { image: "/images/Hot Wheels.jpg", caption: "" },
     { image: "/images/impala.jpg", caption: "" },
     { image: "/images/impala-mae.JPG", caption: "" },
   ]
