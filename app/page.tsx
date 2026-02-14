@@ -90,7 +90,7 @@ function LoadingAnimation({ onComplete }: { onComplete: () => void }) {
           animate={{ opacity: 1 }}
           transition={{ delay: 1.2 }}
         >
-          地域のカーライフをサポート
+          地域のカーライフをサポートします。
         </motion.p>
       </div>
     </motion.div>
@@ -293,7 +293,7 @@ function HeroSlider() {
             RAKEY FIELD
           </h1>
           <p className="text-lg md:text-xl text-background/90 max-w-2xl mx-auto leading-relaxed text-balance">
-            地域の人々のカーライフを一生涯サポートする
+            地域の人々のカーライフを一生涯サポートします。
           </p>
         </motion.div>
       </div>
@@ -398,10 +398,10 @@ function ConceptSection() {
           <FadeInUp delay={0.2}>
             <div className="space-y-6">
               <p className="text-lg md:text-xl text-muted-foreground leading-relaxed text-pretty">
-                この地域（「堺市中区」「陶器」、「福田」）の人々のカーライフを一生涯サポートする。
+                私たちは、この地域（「堺市中区」「陶器」、「福田」）の人々のカーライフを一生涯サポートします。
               </p>
               <p className="text-lg md:text-xl text-muted-foreground leading-relaxed text-pretty">
-                子どもたちが集い、遊び、大人になって車を買う、そして車の相談で立ち寄る。
+                子どもたちが集い、遊び、大人になって車を買う、そして車の相談で立ち寄る。そんな場所を目指しています。
               </p>
               <p className="text-lg md:text-xl text-muted-foreground leading-relaxed text-pretty">
                 陶器の人々の人生における車の相談事をトータル的にサポートします。
