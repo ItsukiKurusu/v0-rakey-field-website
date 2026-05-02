@@ -33,7 +33,7 @@ export function Header() {
       }`}
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ delay: 2.5, duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+      transition={{ delay: 1.7, duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
     >
       <div className="container mx-auto px-6 py-4 flex items-center justify-between">
         <a

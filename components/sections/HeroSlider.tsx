@@ -50,13 +50,13 @@ export function HeroSlider() {
           className="text-center px-4"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 2.9, duration: 0.9, ease: [0.25, 0.46, 0.45, 0.94] }}
+          transition={{ delay: 1.1, duration: 0.9, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
           <motion.p
             className="text-background/75 text-xs md:text-sm tracking-[0.35em] uppercase mb-5"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 3.1, duration: 0.8 }}
+            transition={{ delay: 1.3, duration: 0.8 }}
           >
             Sakai City, Osaka
           </motion.p>
@@ -72,7 +72,7 @@ export function HeroSlider() {
             className="text-base md:text-lg text-background/80 max-w-lg mx-auto leading-relaxed mt-7"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 3.3, duration: 0.8 }}
+            transition={{ delay: 1.5, duration: 0.8 }}
           >
             地域の人々のカーライフを、一生涯サポートします。
           </motion.p>
@@ -84,7 +84,7 @@ export function HeroSlider() {
         className="absolute bottom-16 left-1/2 -translate-x-1/2 flex gap-2"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 3.5 }}
+        transition={{ delay: 1.7 }}
       >
         {heroImages.map((_, index) => (
           <button
@@ -103,7 +103,7 @@ export function HeroSlider() {
         className="absolute bottom-5 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 3.8 }}
+        transition={{ delay: 2.0 }}
       >
         <span className="text-background/45 text-[10px] tracking-[0.2em] uppercase">Scroll</span>
         <motion.div
