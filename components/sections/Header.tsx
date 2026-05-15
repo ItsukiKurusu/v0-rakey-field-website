@@ -11,6 +11,7 @@ const navItems = [
   { label: "コンセプト", href: "#concept" },
   { label: "ストーリー", href: "#origin" },
   { label: "サービス", href: "#services" },
+  { label: "レンタカー", href: "/rental-car" },
   { label: "会社概要", href: "#company" },
 ]
 

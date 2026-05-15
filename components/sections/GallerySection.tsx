@@ -11,6 +11,8 @@ const galleryItems = [
   { image: "/images/garage-soto.jpg" },
   { image: "/images/garage.jpg" },
   { image: "/images/garage2-tate.jpg" },
+  { image: "/images/garage-1.jpg" },
+  { image: "/images/garage-2.jpg" },
   { image: "/images/Hot Wheels.jpg" },
   { image: "/images/impala.jpg" },
   { image: "/images/impala-mae.JPG" },
