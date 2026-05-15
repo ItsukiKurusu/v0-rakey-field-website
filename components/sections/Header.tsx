@@ -38,7 +38,7 @@ export function Header() {
     >
       <div className="container mx-auto px-6 py-4 flex items-center justify-between">
         <a
-          href="#"
+          href="/"
           className="text-2xl md:text-3xl font-bold tracking-wider text-foreground hover:text-primary transition-colors"
           style={{ fontFamily: "var(--font-bebas-neue), Impact, sans-serif" }}
         >
