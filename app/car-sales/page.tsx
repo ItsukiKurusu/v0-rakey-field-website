@@ -125,55 +125,52 @@ export default function CarSalesPage() {
           </div>
         </section>
 
-        {/* Car Photos */}
+        {/* Services Detail */}
         <section className="py-20 bg-background">
           <div className="container mx-auto px-6">
             <FadeInUp>
               <div className="flex items-center gap-4 mb-3 justify-center">
                 <div className="h-px w-8 bg-primary" />
-                <span className="text-primary text-xs tracking-[0.25em] uppercase font-medium">Gallery</span>
+                <span className="text-primary text-xs tracking-[0.25em] uppercase font-medium">Services</span>
                 <div className="h-px w-8 bg-primary" />
               </div>
               <h2 className="text-3xl md:text-4xl font-bold text-foreground text-center mb-12">
-                取扱車両例
+                サービス内容
               </h2>
             </FadeInUp>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
-              {[
-                { src: "/images/impala.jpg", label: "シボレー インパラ" },
-                { src: "/images/impala-mae.JPG", label: "シボレー インパラ（フロント）" },
-              ].map((car, i) => (
-                <FadeInUp key={i} delay={i * 0.1}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-3xl mx-auto">
+              {services.map((s, i) => (
+                <FadeInUp key={i} delay={i * 0.08}>
                   <motion.div
-                    className="rounded-2xl overflow-hidden border border-border bg-card"
+                    className="bg-card p-7 rounded-2xl border border-border h-full"
                     whileHover={{ y: -4, boxShadow: "0 16px 40px -12px rgba(0,0,0,0.12)" }}
                     transition={{ duration: 0.25 }}
                   >
-                    <div className="relative h-64 bg-muted">
-                      <Image src={car.src} alt={car.label} fill className="object-cover" />
-                    </div>
-                    <div className="p-5">
-                      <p className="font-bold text-foreground text-lg">{car.label}</p>
-                      <p className="text-sm text-muted-foreground mt-0.5">詳細はお問い合わせください</p>
-                    </div>
+                    <h3 className="text-lg font-bold text-foreground mb-3">{s.title}</h3>
+                    <p className="text-muted-foreground text-sm leading-relaxed">{s.description}</p>
                   </motion.div>
                 </FadeInUp>
               ))}
             </div>
 
-            <FadeInUp delay={0.3}>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-3xl mx-auto mt-12">
-                {services.map((s, i) => (
-                  <motion.div
-                    key={i}
-                    className="bg-card p-6 rounded-2xl border border-border h-full"
-                    whileHover={{ y: -4, boxShadow: "0 16px 40px -12px rgba(0,0,0,0.12)" }}
-                    transition={{ duration: 0.25 }}
-                  >
-                    <h3 className="text-lg font-bold text-foreground mb-2">{s.title}</h3>
-                    <p className="text-muted-foreground text-sm leading-relaxed">{s.description}</p>
-                  </motion.div>
-                ))}
+            {/* 一言バナー */}
+            <FadeInUp delay={0.35}>
+              <div className="mt-14 max-w-3xl mx-auto rounded-2xl bg-foreground px-8 py-10 flex flex-col md:flex-row items-center justify-between gap-6">
+                <div>
+                  <p className="text-primary text-xs tracking-widest uppercase font-bold mb-2">One Stop Service</p>
+                  <p className="text-2xl md:text-3xl font-bold text-background leading-snug">
+                    買取も販売も、<br className="md:hidden" />お電話１本でOK！
+                  </p>
+                  <p className="text-background/60 text-sm mt-2">
+                    まずはお気軽にご相談ください。丁寧にご対応いたします。
+                  </p>
+                </div>
+                <a href="tel:0723394549" className="shrink-0">
+                  <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-7 text-base font-bold whitespace-nowrap">
+                    <Phone className="h-4 w-4 mr-2" />
+                    072-339-4549
+                  </Button>
+                </a>
               </div>
             </FadeInUp>
           </div>
