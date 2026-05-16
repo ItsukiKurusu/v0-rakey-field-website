@@ -1,7 +1,8 @@
 "use client"
 
+import { useRef } from "react"
+import { motion, useScroll, useTransform } from "framer-motion"
 import { FadeInUp } from "@/components/shared/FadeInUp"
-import { ParallaxSection } from "@/components/shared/ParallaxSection"
 
 const originStories = [
   "子どもたちが、家族で乗っていた車に名前をつけた＝RAKEY（家族みんなの頭文字）",
@@ -12,8 +13,23 @@ const originStories = [
 ]
 
 export function OriginSection() {
+  const ref = useRef<HTMLDivElement>(null)
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] })
+  const y = useTransform(scrollYProgress, [0, 1], ["-10%", "10%"])
+
   return (
-    <ParallaxSection imageUrl="/images/30ebf32b-768b-4a9c-ba64.jpeg">
+    <div ref={ref} className="relative overflow-hidden">
+      {/* Parallax background */}
+      <motion.div className="absolute inset-0 -z-10" style={{ y }}>
+        <img
+          src="/images/S__7413768_0.jpg"
+          alt=""
+          className="w-full h-[120%] object-cover"
+        />
+        {/* 左→右にグラデーション：左は濃く、右は少し薄く */}
+        <div className="absolute inset-0 bg-gradient-to-br from-foreground/80 via-foreground/60 to-foreground/50" />
+      </motion.div>
+
       <section id="origin" className="py-24 md:py-40">
         <div className="container mx-auto px-6">
           <FadeInUp>
@@ -22,16 +38,16 @@ export function OriginSection() {
               <span className="text-primary text-xs tracking-[0.25em] uppercase font-medium">Story</span>
               <div className="h-px w-8 bg-primary" />
             </div>
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-background text-center mb-16">
               RAKEY FIELDの由来
             </h2>
           </FadeInUp>
 
           <div className="max-w-2xl mx-auto">
-            <div className="bg-background/97 backdrop-blur-sm rounded-2xl p-8 md:p-10 shadow-lg">
+            <div className="bg-background/10 backdrop-blur-md border border-background/20 rounded-2xl p-8 md:p-10 shadow-2xl">
               <div className="relative">
                 {/* Timeline vertical line */}
-                <div className="absolute left-4 top-5 bottom-5 w-px bg-border" />
+                <div className="absolute left-4 top-5 bottom-5 w-px bg-background/30" />
                 <ul className="space-y-8">
                   {originStories.map((story, index) => (
                     <FadeInUp key={index} delay={index * 0.1}>
@@ -39,7 +55,7 @@ export function OriginSection() {
                         <div className="relative flex-shrink-0 w-8 h-8 rounded-full bg-primary flex items-center justify-center z-10">
                           <span className="text-primary-foreground text-xs font-bold">{index + 1}</span>
                         </div>
-                        <p className="text-foreground text-base md:text-lg leading-relaxed pt-1">
+                        <p className="text-background text-base md:text-lg leading-relaxed pt-1">
                           {story}
                         </p>
                       </li>
@@ -51,13 +67,13 @@ export function OriginSection() {
 
             <FadeInUp delay={0.6}>
               <div className="mt-8 max-w-sm mx-auto">
-                <div className="relative rounded-2xl overflow-hidden shadow-lg bg-background/97 p-6">
+                <div className="relative rounded-2xl overflow-hidden shadow-lg bg-background/10 backdrop-blur-md border border-background/20 p-6">
                   <img
                     src="/images/logo-raw.jpg"
                     alt="RAKEY FIELD ロゴ"
                     className="w-full h-auto object-contain"
                   />
-                  <p className="text-center text-sm text-muted-foreground mt-4">
+                  <p className="text-center text-sm text-background/70 mt-4">
                     子どもたちが作ったオリジナルロゴ
                   </p>
                 </div>
@@ -66,6 +82,6 @@ export function OriginSection() {
           </div>
         </div>
       </section>
-    </ParallaxSection>
+    </div>
   )
 }
