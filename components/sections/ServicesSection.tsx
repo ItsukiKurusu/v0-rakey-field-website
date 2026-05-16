@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion"
 import { Car, Key, Wrench, Shield, Package } from "lucide-react"
+import Link from "next/link"
 import { FadeInUp } from "@/components/shared/FadeInUp"
 
 const services = [
@@ -9,26 +10,31 @@ const services = [
     icon: Car,
     title: "自動車 買取/販売",
     description: "新車・中古車の買取から販売まで幅広く対応いたします。",
+    href: "/car-sales",
   },
   {
     icon: Key,
     title: "レンタカー",
     description: "必要な時に、必要な車を。短期から長期まで柔軟に対応いたします。",
+    href: "/rental-car",
   },
   {
     icon: Package,
     title: "アンティーク雑貨 輸入販売",
     description: "アメリカンヴィンテージを中心とした雑貨を取り揃えています。",
+    href: "/antique",
   },
   {
     icon: Wrench,
     title: "メンテナンス・車検・板金",
     description: "定期点検から車検、板金修理まで、お車のメンテナンスはお任せください。",
+    href: "/maintenance",
   },
   {
     icon: Shield,
-    title: "生命保険・損害保険",
+    title: "生命保険・損害保険・自動車保険",
     description: "お車と一緒に、保険のご相談も承ります。",
+    href: "/insurance",
   },
 ]
 
@@ -62,17 +68,19 @@ export function ServicesSection() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 max-w-5xl mx-auto">
           {services.map((service, index) => (
             <FadeInUp key={index} delay={index * 0.08}>
-              <motion.div
-                className="bg-card p-7 rounded-2xl border border-border h-full cursor-default"
-                whileHover={{ y: -6, boxShadow: "0 20px 40px -12px rgba(0,0,0,0.12)" }}
-                transition={{ duration: 0.25, ease: "easeOut" }}
-              >
-                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-5">
-                  <service.icon className="h-5 w-5 text-primary" />
-                </div>
-                <h3 className="text-lg font-bold text-foreground mb-2">{service.title}</h3>
-                <p className="text-muted-foreground text-sm leading-relaxed">{service.description}</p>
-              </motion.div>
+              <Link href={service.href} className="block h-full">
+                <motion.div
+                  className="bg-card p-7 rounded-2xl border border-border h-full cursor-pointer"
+                  whileHover={{ y: -6, boxShadow: "0 20px 40px -12px rgba(0,0,0,0.12)" }}
+                  transition={{ duration: 0.25, ease: "easeOut" }}
+                >
+                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-5">
+                    <service.icon className="h-5 w-5 text-primary" />
+                  </div>
+                  <h3 className="text-lg font-bold text-foreground mb-2">{service.title}</h3>
+                  <p className="text-muted-foreground text-sm leading-relaxed">{service.description}</p>
+                </motion.div>
+              </Link>
             </FadeInUp>
           ))}
         </div>
