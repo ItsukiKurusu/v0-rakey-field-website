@@ -26,8 +26,7 @@ export function OriginSection() {
           alt=""
           className="w-full h-[120%] object-cover"
         />
-        {/* 左→右にグラデーション：左は濃く、右は少し薄く */}
-        <div className="absolute inset-0 bg-gradient-to-br from-foreground/80 via-foreground/60 to-foreground/50" />
+        <div className="absolute inset-0 bg-black/65" />
       </motion.div>
 
       <section id="origin" className="py-24 md:py-40">
@@ -38,16 +37,15 @@ export function OriginSection() {
               <span className="text-primary text-xs tracking-[0.25em] uppercase font-medium">Story</span>
               <div className="h-px w-8 bg-primary" />
             </div>
-            <h2 className="text-3xl md:text-4xl font-bold text-background text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-16">
               RAKEY FIELDの由来
             </h2>
           </FadeInUp>
 
           <div className="max-w-2xl mx-auto">
-            <div className="bg-background/10 backdrop-blur-md border border-background/20 rounded-2xl p-8 md:p-10 shadow-2xl">
+            <div className="bg-white/10 rounded-2xl p-8 md:p-10 shadow-2xl border border-white/15">
               <div className="relative">
-                {/* Timeline vertical line */}
-                <div className="absolute left-4 top-5 bottom-5 w-px bg-background/30" />
+                <div className="absolute left-4 top-5 bottom-5 w-px bg-white/25" />
                 <ul className="space-y-8">
                   {originStories.map((story, index) => (
                     <FadeInUp key={index} delay={index * 0.1}>
@@ -55,7 +53,7 @@ export function OriginSection() {
                         <div className="relative flex-shrink-0 w-8 h-8 rounded-full bg-primary flex items-center justify-center z-10">
                           <span className="text-primary-foreground text-xs font-bold">{index + 1}</span>
                         </div>
-                        <p className="text-background text-base md:text-lg leading-relaxed pt-1">
+                        <p className="text-white/90 text-base md:text-lg leading-relaxed pt-1">
                           {story}
                         </p>
                       </li>
@@ -67,13 +65,13 @@ export function OriginSection() {
 
             <FadeInUp delay={0.6}>
               <div className="mt-8 max-w-sm mx-auto">
-                <div className="relative rounded-2xl overflow-hidden shadow-lg bg-background/10 backdrop-blur-md border border-background/20 p-6">
+                <div className="rounded-2xl overflow-hidden shadow-lg bg-white/10 border border-white/15 p-6">
                   <img
                     src="/images/logo-raw.jpg"
                     alt="RAKEY FIELD ロゴ"
                     className="w-full h-auto object-contain"
                   />
-                  <p className="text-center text-sm text-background/70 mt-4">
+                  <p className="text-center text-sm text-white/60 mt-4">
                     子どもたちが作ったオリジナルロゴ
                   </p>
                 </div>
