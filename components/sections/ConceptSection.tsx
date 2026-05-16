@@ -41,6 +41,30 @@ export function ConceptSection() {
             </div>
           </FadeInUp>
         </div>
+
+        {/* 店内写真 */}
+        <FadeInUp delay={0.35}>
+          <div className="max-w-5xl mx-auto mt-14 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="relative rounded-2xl overflow-hidden shadow-lg aspect-[4/3] group">
+              <img
+                src="/images/S__7413768_0.jpg"
+                alt="RAKEY FIELD 店内"
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-foreground/50 to-transparent" />
+              <p className="absolute bottom-4 left-5 text-background font-bold text-sm tracking-wide">店内の様子</p>
+            </div>
+            <div className="relative rounded-2xl overflow-hidden shadow-lg aspect-[4/3] group">
+              <img
+                src="/images/S__7413769_0.jpg"
+                alt="RAKEY FIELD 店内アンティーク雑貨"
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-foreground/50 to-transparent" />
+              <p className="absolute bottom-4 left-5 text-background font-bold text-sm tracking-wide">アメリカン雑貨も充実</p>
+            </div>
+          </div>
+        </FadeInUp>
       </div>
     </section>
   )

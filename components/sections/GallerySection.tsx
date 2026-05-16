@@ -6,6 +6,8 @@ import { ChevronLeft, ChevronRight } from "lucide-react"
 import { FadeInUp } from "@/components/shared/FadeInUp"
 
 const galleryItems = [
+  { image: "/images/S__7413768_0.jpg" },
+  { image: "/images/S__7413769_0.jpg" },
   { image: "/images/comics.jpg" },
   { image: "/images/garage-soto-hiki.jpg" },
   { image: "/images/garage-soto.jpg" },

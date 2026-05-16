@@ -9,6 +9,7 @@ import { HeroSlider } from "@/components/sections/HeroSlider"
 import { ConceptSection } from "@/components/sections/ConceptSection"
 import { OriginSection } from "@/components/sections/OriginSection"
 import { ServicesSection } from "@/components/sections/ServicesSection"
+import { ShopBannerSection } from "@/components/sections/ShopBannerSection"
 import { GallerySection } from "@/components/sections/GallerySection"
 import { CompanySection } from "@/components/sections/CompanySection"
 import { ContactSection } from "@/components/sections/ContactSection"
@@ -38,6 +39,7 @@ export default function Home() {
             <ConceptSection />
             <OriginSection />
             <ServicesSection />
+            <ShopBannerSection />
             <GallerySection />
             <CompanySection />
             <ContactSection />
