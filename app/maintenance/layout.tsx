@@ -4,12 +4,12 @@ import type { ReactNode } from 'react'
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://rakey-field.com'
 
 export const metadata: Metadata = {
-  title: 'メンテナンス・車検・板金 | 堺市・大阪ならRAKEY FIELD',
+  title: { absolute: 'メンテナンス・車検・板金 | 堺市・大阪ならRAKEY FIELD' },
   description: '堺市中区のメンテナンス・車検・板金はRAKEY FIELDへ。交通事故対応もお任せください。定期点検から車検、板金修理まで幅広く対応。TEL: 072-339-4549',
   keywords: [
     'メンテナンス 堺市', '車検 堺市', '板金 堺市', '交通事故 修理 堺市',
     '車検 堺市中区', '板金塗装 堺市', '自動車修理 堺市', '車検 大阪',
-    '板金 大阪', '事故車修理 堺市',
+    '板金 大阪', '事故車修理 堺市', '車検 費用 堺市', '車検 時期', '車検切れ',
   ],
   alternates: {
     canonical: '/maintenance',

@@ -1,3 +1,5 @@
+import Link from "next/link"
+import { ArrowRight } from "lucide-react"
 import type { BlogContentBlock } from "@/lib/blog-posts"
 
 export function BlogContent({ blocks }: { blocks: BlogContentBlock[] }) {
@@ -83,6 +85,21 @@ export function BlogContent({ blocks }: { blocks: BlogContentBlock[] }) {
               className="rounded-2xl bg-primary/10 border border-primary/20 p-5 text-foreground font-medium leading-relaxed"
             >
               {block.text}
+            </div>
+          )
+        }
+
+        if (block.type === "cta") {
+          return (
+            <div key={i} className="rounded-2xl bg-primary/10 border border-primary/20 p-6">
+              <p className="text-foreground font-medium leading-relaxed mb-4">{block.text}</p>
+              <Link
+                href={block.href}
+                className="inline-flex items-center gap-1.5 text-sm font-bold text-primary hover:underline"
+              >
+                {block.label}
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
             </div>
           )
         }

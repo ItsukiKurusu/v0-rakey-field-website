@@ -4,7 +4,7 @@ import type { ReactNode } from 'react'
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://rakey-field.com'
 
 export const metadata: Metadata = {
-  title: '自動車 買取/販売 | 堺市・大阪ならRAKEY FIELD',
+  title: { absolute: '自動車 買取/販売 | 堺市・大阪ならRAKEY FIELD' },
   description: '堺市中区の自動車買取・販売はRAKEY FIELDへ。お車を手放される際はご相談ください。大切な愛車を責任を持ってお預かりいたします。TEL: 072-339-4549',
   keywords: [
     '車買取 堺市', '車販売 堺市', '中古車 堺市', '自動車買取 堺市中区',

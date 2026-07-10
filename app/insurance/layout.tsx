@@ -4,7 +4,7 @@ import type { ReactNode } from 'react'
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://rakey-field.com'
 
 export const metadata: Metadata = {
-  title: '生命保険・損害保険・自動車保険 | 堺市・大阪ならRAKEY FIELD',
+  title: { absolute: '生命保険・損害保険・自動車保険 | 堺市・大阪ならRAKEY FIELD' },
   description: '堺市中区の保険相談はRAKEY FIELDへ。生命保険・損害保険・自動車保険のご相談を承ります。お車と一緒に保険もまとめてご相談いただけます。TEL: 072-339-4549',
   keywords: [
     '保険 堺市', '自動車保険 堺市', '生命保険 堺市', '損害保険 堺市',

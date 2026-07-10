@@ -4,7 +4,7 @@ import type { ReactNode } from 'react'
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://rakey-field.com'
 
 export const metadata: Metadata = {
-  title: 'アンティーク雑貨 輸入販売 | 堺市・大阪ならRAKEY FIELD',
+  title: { absolute: 'アンティーク雑貨 輸入販売 | 堺市・大阪ならRAKEY FIELD' },
   description: '堺市中区のアンティーク雑貨輸入販売はRAKEY FIELDへ。アメリカから直輸入！アメリカンヴィンテージを中心とした雑貨を取り揃え。注文販売も承ります。TEL: 072-339-4549',
   keywords: [
     'アンティーク雑貨 堺市', 'アメリカン雑貨 堺市', 'ヴィンテージ雑貨 堺市',
