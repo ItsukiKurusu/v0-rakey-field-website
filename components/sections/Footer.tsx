@@ -2,6 +2,7 @@ const navLinks = [
   { label: "コンセプト", href: "#concept" },
   { label: "ストーリー", href: "#origin" },
   { label: "サービス", href: "#services" },
+  { label: "ブログ", href: "/blog" },
   { label: "会社概要", href: "#company" },
   { label: "お問い合わせ", href: "#contact" },
 ]

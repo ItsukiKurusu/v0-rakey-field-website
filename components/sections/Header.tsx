@@ -12,6 +12,7 @@ const navItems = [
   { label: "ストーリー", href: "/#origin" },
   { label: "サービス", href: "/#services" },
   { label: "レンタカー", href: "/rental-car" },
+  { label: "ブログ", href: "/blog" },
   { label: "会社概要", href: "/#company" },
 ]
 
