@@ -28,7 +28,7 @@ export function ContactModal() {
           <Label htmlFor="modal-message">お問い合わせ内容</Label>
           <Textarea id="modal-message" placeholder="ご相談内容をご記入ください" rows={4} className="text-base" />
         </div>
-        <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
+        <Button className="w-full bg-destructive text-destructive-foreground hover:bg-destructive/90">
           送信する
         </Button>
         <div className="pt-4 border-t border-border">

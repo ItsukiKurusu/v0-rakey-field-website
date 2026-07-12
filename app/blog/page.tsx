@@ -25,7 +25,7 @@ export default function BlogIndexPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
             >
-              <div className="inline-flex items-center gap-2 bg-primary/80 text-primary-foreground text-xs font-bold tracking-widest uppercase px-4 py-1.5 rounded-full mb-6">
+              <div className="inline-flex items-center gap-2 bg-accent text-accent-foreground text-xs font-bold tracking-widest uppercase px-4 py-1.5 rounded-full mb-6">
                 <BookOpen className="h-3.5 w-3.5" />
                 Blog
               </div>
@@ -56,7 +56,7 @@ export default function BlogIndexPage() {
                     >
                       <div className="relative h-48 bg-muted">
                         <Image src={post.heroImage} alt={post.title} fill className="object-cover" />
-                        <span className="absolute top-3 left-3 bg-primary text-primary-foreground text-xs font-bold px-3 py-1 rounded-full">
+                        <span className="absolute top-3 left-3 bg-accent text-accent-foreground text-xs font-bold px-3 py-1 rounded-full">
                           {post.categoryLabel}
                         </span>
                       </div>
@@ -95,7 +95,7 @@ export default function BlogIndexPage() {
                 レンタカー・車検のご相談も、お電話一本でスムーズにご案内いたします。
               </p>
               <a href="tel:0723394549">
-                <span className="inline-flex items-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-8 py-4 text-lg font-bold transition-colors">
+                <span className="inline-flex items-center gap-2 bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-full px-8 py-4 text-lg font-bold transition-colors">
                   <Phone className="h-5 w-5" />
                   072-339-4549
                 </span>

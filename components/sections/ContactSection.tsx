@@ -128,7 +128,7 @@ export function ContactSection() {
                 </div>
                 <Dialog>
                   <DialogTrigger asChild>
-                    <Button className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-6 flex-shrink-0">
+                    <Button className="bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-full px-6 flex-shrink-0">
                       フォームで問い合わせ
                     </Button>
                   </DialogTrigger>

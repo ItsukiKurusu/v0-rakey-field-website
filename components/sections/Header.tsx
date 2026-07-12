@@ -62,7 +62,7 @@ export function Header() {
             <DialogTrigger asChild>
               <Button
                 size="sm"
-                className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-5"
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-full px-5"
               >
                 お問い合わせ
               </Button>
@@ -107,7 +107,7 @@ export function Header() {
               ))}
               <Dialog>
                 <DialogTrigger asChild>
-                  <Button className="w-full bg-primary text-primary-foreground mt-2">
+                  <Button className="w-full bg-destructive text-destructive-foreground mt-2">
                     お問い合わせ
                   </Button>
                 </DialogTrigger>
