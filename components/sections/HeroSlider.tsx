@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { ChevronDown } from "lucide-react"
 
 const heroImages = [
-  "/images/e1100f09-74ca-4a8c-a6bd.jpeg",
+  "/images/california.jpg",
   "/images/S__7413768_0.jpg",
   "/images/30ebf32b-768b-4a9c-ba64.jpeg",
   "/images/S__7413769_0.jpg",
