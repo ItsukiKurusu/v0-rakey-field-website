@@ -24,7 +24,7 @@ export function ShopBannerSection() {
       {/* Content */}
       <div className="relative z-10 h-full flex flex-col items-center justify-center px-6 text-center">
         <FadeInUp>
-          <p className="text-primary text-xs tracking-[0.3em] uppercase font-bold mb-4">
+          <p className="text-accent text-xs tracking-[0.3em] uppercase font-bold mb-4">
             Our Shop
           </p>
           <h2

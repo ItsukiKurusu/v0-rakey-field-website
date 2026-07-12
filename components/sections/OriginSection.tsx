@@ -33,9 +33,9 @@ export function OriginSection() {
         <div className="container mx-auto px-6">
           <FadeInUp>
             <div className="flex items-center gap-4 mb-3 justify-center">
-              <div className="h-px w-8 bg-primary" />
-              <span className="text-primary text-xs tracking-[0.25em] uppercase font-medium">Story</span>
-              <div className="h-px w-8 bg-primary" />
+              <div className="h-px w-8 bg-destructive" />
+              <span className="text-destructive text-xs tracking-[0.25em] uppercase font-medium">Story</span>
+              <div className="h-px w-8 bg-destructive" />
             </div>
             <h2 className="text-3xl md:text-4xl font-bold text-foreground text-center mb-16">
               RAKEY FIELDの由来
@@ -50,8 +50,8 @@ export function OriginSection() {
                   {originStories.map((story, index) => (
                     <FadeInUp key={index} delay={index * 0.1}>
                       <li className="flex items-start gap-6">
-                        <div className="relative flex-shrink-0 w-8 h-8 rounded-full bg-primary flex items-center justify-center z-10">
-                          <span className="text-primary-foreground text-xs font-bold">{index + 1}</span>
+                        <div className="relative flex-shrink-0 w-8 h-8 rounded-full bg-accent flex items-center justify-center z-10">
+                          <span className="text-accent-foreground text-xs font-bold">{index + 1}</span>
                         </div>
                         <p className="text-foreground text-base md:text-lg leading-relaxed pt-1">
                           {story}

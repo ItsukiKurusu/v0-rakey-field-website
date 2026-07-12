@@ -69,7 +69,7 @@ export default function InsurancePage() {
               >
                 生命保険・損害保険<br />自動車保険
               </h1>
-              <p className="text-2xl md:text-3xl font-bold text-primary mb-3">
+              <p className="text-2xl md:text-3xl font-bold text-destructive mb-3">
                 保険のご相談も承ります！
               </p>
               <p className="text-background/70 text-lg max-w-xl mx-auto">
@@ -113,7 +113,7 @@ export default function InsurancePage() {
               {features.map((f, i) => (
                 <FadeInUp key={i} delay={i * 0.07}>
                   <div className="flex items-center gap-3 bg-card rounded-xl p-4 border border-border">
-                    <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                    <div className="w-9 h-9 rounded-lg bg-accent/25 flex items-center justify-center shrink-0">
                       <f.icon className="h-4 w-4 text-primary" />
                     </div>
                     <span className="text-sm font-medium text-foreground leading-snug">{f.text}</span>
@@ -129,9 +129,9 @@ export default function InsurancePage() {
           <div className="container mx-auto px-6">
             <FadeInUp>
               <div className="flex items-center gap-4 mb-3 justify-center">
-                <div className="h-px w-8 bg-primary" />
-                <span className="text-primary text-xs tracking-[0.25em] uppercase font-medium">Services</span>
-                <div className="h-px w-8 bg-primary" />
+                <div className="h-px w-8 bg-destructive" />
+                <span className="text-destructive text-xs tracking-[0.25em] uppercase font-medium">Services</span>
+                <div className="h-px w-8 bg-destructive" />
               </div>
               <h2 className="text-3xl md:text-4xl font-bold text-foreground text-center mb-12">
                 取り扱い保険
@@ -145,7 +145,7 @@ export default function InsurancePage() {
                     whileHover={{ y: -4, boxShadow: "0 16px 40px -12px rgba(0,0,0,0.12)" }}
                     transition={{ duration: 0.25 }}
                   >
-                    <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
+                    <div className="w-12 h-12 rounded-xl bg-accent/25 flex items-center justify-center mb-4">
                       <ins.icon className="h-5 w-5 text-primary" />
                     </div>
                     <h3 className="text-lg font-bold text-foreground mb-2">{ins.title}</h3>

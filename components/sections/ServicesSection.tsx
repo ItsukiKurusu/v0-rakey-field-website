@@ -44,15 +44,15 @@ export function ServicesSection() {
       <div className="container mx-auto px-6">
         <FadeInUp>
           <div className="flex items-center gap-4 mb-3 justify-center">
-            <div className="h-px w-8 bg-primary" />
-            <span className="text-primary text-xs tracking-[0.25em] uppercase font-medium">Services</span>
-            <div className="h-px w-8 bg-primary" />
+            <div className="h-px w-8 bg-destructive" />
+            <span className="text-destructive text-xs tracking-[0.25em] uppercase font-medium">Services</span>
+            <div className="h-px w-8 bg-destructive" />
           </div>
           <div className="text-center mb-4">
             <p className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-2">
               おまかせください！
             </p>
-            <p className="text-3xl md:text-4xl font-bold text-primary">
+            <p className="text-3xl md:text-4xl font-bold text-destructive">
               お電話１本ですべてOKです！
             </p>
           </div>
@@ -74,7 +74,7 @@ export function ServicesSection() {
                   whileHover={{ y: -6, boxShadow: "0 20px 40px -12px rgba(0,0,0,0.12)" }}
                   transition={{ duration: 0.25, ease: "easeOut" }}
                 >
-                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-5">
+                  <div className="w-12 h-12 rounded-xl bg-accent/25 flex items-center justify-center mb-5">
                     <service.icon className="h-5 w-5 text-primary" />
                   </div>
                   <h3 className="text-lg font-bold text-foreground mb-2">{service.title}</h3>

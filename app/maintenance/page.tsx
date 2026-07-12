@@ -70,7 +70,7 @@ export default function MaintenancePage() {
               >
                 メンテナンス
               </h1>
-              <p className="text-2xl md:text-3xl font-bold text-primary mb-3">
+              <p className="text-2xl md:text-3xl font-bold text-destructive mb-3">
                 交通事故対応もお任せください！
               </p>
               <p className="text-background/70 text-lg max-w-xl mx-auto">
@@ -115,7 +115,7 @@ export default function MaintenancePage() {
               {features.map((f, i) => (
                 <FadeInUp key={i} delay={i * 0.07}>
                   <div className="flex items-center gap-3 bg-card rounded-xl p-4 border border-border">
-                    <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                    <div className="w-9 h-9 rounded-lg bg-accent/25 flex items-center justify-center shrink-0">
                       <f.icon className="h-4 w-4 text-primary" />
                     </div>
                     <span className="text-sm font-medium text-foreground leading-snug">{f.text}</span>
@@ -131,9 +131,9 @@ export default function MaintenancePage() {
           <div className="container mx-auto px-6">
             <FadeInUp>
               <div className="flex items-center gap-4 mb-3 justify-center">
-                <div className="h-px w-8 bg-primary" />
-                <span className="text-primary text-xs tracking-[0.25em] uppercase font-medium">Services</span>
-                <div className="h-px w-8 bg-primary" />
+                <div className="h-px w-8 bg-destructive" />
+                <span className="text-destructive text-xs tracking-[0.25em] uppercase font-medium">Services</span>
+                <div className="h-px w-8 bg-destructive" />
               </div>
               <h2 className="text-3xl md:text-4xl font-bold text-foreground text-center mb-12">
                 対応メニュー
