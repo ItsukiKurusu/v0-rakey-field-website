@@ -12,9 +12,9 @@ export function ContactSection() {
       <div className="container mx-auto px-6">
         <FadeInUp>
           <div className="flex items-center gap-4 mb-3 justify-center">
-            <div className="h-px w-8 bg-primary" />
-            <span className="text-primary text-xs tracking-[0.25em] uppercase font-medium">Contact</span>
-            <div className="h-px w-8 bg-primary" />
+            <div className="h-px w-8 bg-destructive" />
+            <span className="text-destructive text-xs tracking-[0.25em] uppercase font-medium">Contact</span>
+            <div className="h-px w-8 bg-destructive" />
           </div>
           <div className="text-center mb-14">
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-2">お問い合わせ</h2>
@@ -34,7 +34,7 @@ export function ContactSection() {
                     href="tel:072-339-4549"
                     className="flex items-center gap-3 p-3 rounded-xl bg-primary/5 hover:bg-primary/10 transition-colors group"
                   >
-                    <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                    <div className="w-8 h-8 rounded-lg bg-accent/25 flex items-center justify-center flex-shrink-0">
                       <Phone className="h-4 w-4 text-primary" />
                     </div>
                     <div>
@@ -57,7 +57,7 @@ export function ContactSection() {
                     href="tel:090-1893-0467"
                     className="flex items-center gap-3 p-3 rounded-xl bg-primary/5 hover:bg-primary/10 transition-colors group"
                   >
-                    <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                    <div className="w-8 h-8 rounded-lg bg-accent/25 flex items-center justify-center flex-shrink-0">
                       <Phone className="h-4 w-4 text-primary" />
                     </div>
                     <div>
@@ -81,7 +81,7 @@ export function ContactSection() {
                     href="mailto:haegiwa.com@icloud.com"
                     className="flex items-center gap-3 p-3 rounded-xl bg-primary/5 hover:bg-primary/10 transition-colors group"
                   >
-                    <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                    <div className="w-8 h-8 rounded-lg bg-accent/25 flex items-center justify-center flex-shrink-0">
                       <Mail className="h-4 w-4 text-primary" />
                     </div>
                     <div>
@@ -118,7 +118,7 @@ export function ContactSection() {
             <div className="bg-card p-7 rounded-2xl border border-border">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <div className="w-8 h-8 rounded-lg bg-accent/25 flex items-center justify-center flex-shrink-0 mt-0.5">
                     <MapPin className="h-4 w-4 text-primary" />
                   </div>
                   <div>
@@ -128,7 +128,7 @@ export function ContactSection() {
                 </div>
                 <Dialog>
                   <DialogTrigger asChild>
-                    <Button className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-6 flex-shrink-0">
+                    <Button className="bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-full px-6 flex-shrink-0">
                       フォームで問い合わせ
                     </Button>
                   </DialogTrigger>

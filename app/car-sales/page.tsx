@@ -60,7 +60,7 @@ export default function CarSalesPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
             >
-              <div className="inline-flex items-center gap-2 bg-primary/80 text-primary-foreground text-xs font-bold tracking-widest uppercase px-4 py-1.5 rounded-full mb-6">
+              <div className="inline-flex items-center gap-2 bg-accent text-accent-foreground text-xs font-bold tracking-widest uppercase px-4 py-1.5 rounded-full mb-6">
                 <Car className="h-3.5 w-3.5" />
                 Car Sales
               </div>
@@ -70,7 +70,7 @@ export default function CarSalesPage() {
               >
                 自動車<br />買取 / 販売
               </h1>
-              <p className="text-2xl md:text-3xl font-bold text-primary mb-3">
+              <p className="text-2xl md:text-3xl font-bold text-destructive mb-3">
                 お車を手放される際はご相談ください！
               </p>
               <p className="text-background/70 text-lg max-w-xl mx-auto">
@@ -86,7 +86,7 @@ export default function CarSalesPage() {
             >
               <Dialog>
                 <DialogTrigger asChild>
-                  <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-8 text-base">
+                  <Button size="lg" className="bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-full px-8 text-base">
                     買取・販売を相談する
                   </Button>
                 </DialogTrigger>
@@ -114,7 +114,7 @@ export default function CarSalesPage() {
               {features.map((f, i) => (
                 <FadeInUp key={i} delay={i * 0.07}>
                   <div className="flex items-center gap-3 bg-card rounded-xl p-4 border border-border">
-                    <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                    <div className="w-9 h-9 rounded-lg bg-accent/25 flex items-center justify-center shrink-0">
                       <f.icon className="h-4 w-4 text-primary" />
                     </div>
                     <span className="text-sm font-medium text-foreground leading-snug">{f.text}</span>
@@ -130,9 +130,9 @@ export default function CarSalesPage() {
           <div className="container mx-auto px-6">
             <FadeInUp>
               <div className="flex items-center gap-4 mb-3 justify-center">
-                <div className="h-px w-8 bg-primary" />
-                <span className="text-primary text-xs tracking-[0.25em] uppercase font-medium">Services</span>
-                <div className="h-px w-8 bg-primary" />
+                <div className="h-px w-8 bg-destructive" />
+                <span className="text-destructive text-xs tracking-[0.25em] uppercase font-medium">Services</span>
+                <div className="h-px w-8 bg-destructive" />
               </div>
               <h2 className="text-3xl md:text-4xl font-bold text-foreground text-center mb-12">
                 サービス内容
@@ -157,7 +157,7 @@ export default function CarSalesPage() {
             <FadeInUp delay={0.35}>
               <div className="mt-14 max-w-3xl mx-auto rounded-2xl bg-foreground px-8 py-10 flex flex-col md:flex-row items-center justify-between gap-6">
                 <div>
-                  <p className="text-primary text-xs tracking-widest uppercase font-bold mb-2">One Stop Service</p>
+                  <p className="text-accent text-xs tracking-widest uppercase font-bold mb-2">One Stop Service</p>
                   <p className="text-2xl md:text-3xl font-bold text-background leading-snug">
                     買取も販売も、<br className="md:hidden" />お電話１本でOK！
                   </p>
@@ -166,7 +166,7 @@ export default function CarSalesPage() {
                   </p>
                 </div>
                 <a href="tel:0723394549" className="shrink-0">
-                  <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-7 text-base font-bold whitespace-nowrap">
+                  <Button size="lg" className="bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-full px-7 text-base font-bold whitespace-nowrap">
                     <Phone className="h-4 w-4 mr-2" />
                     072-339-4549
                   </Button>
@@ -189,7 +189,7 @@ export default function CarSalesPage() {
               </p>
               <div className="flex flex-wrap justify-center gap-4">
                 <a href="tel:0723394549">
-                  <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-8 text-lg font-bold">
+                  <Button size="lg" className="bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-full px-8 text-lg font-bold">
                     <Phone className="h-5 w-5 mr-2" />
                     072-339-4549
                   </Button>

@@ -42,9 +42,9 @@ export function GallerySection() {
       <div className="container mx-auto px-6">
         <FadeInUp>
           <div className="flex items-center gap-4 mb-3 justify-center">
-            <div className="h-px w-8 bg-primary" />
-            <span className="text-primary text-xs tracking-[0.25em] uppercase font-medium">Gallery</span>
-            <div className="h-px w-8 bg-primary" />
+            <div className="h-px w-8 bg-destructive" />
+            <span className="text-destructive text-xs tracking-[0.25em] uppercase font-medium">Gallery</span>
+            <div className="h-px w-8 bg-destructive" />
           </div>
           <h2 className="text-3xl md:text-4xl font-bold text-foreground text-center mb-14">
             ギャラリー
@@ -102,8 +102,8 @@ export function GallerySection() {
                   onClick={() => setCurrentIndex(index)}
                   className={`h-1.5 rounded-full transition-all duration-300 ${
                     index === currentIndex
-                      ? "bg-primary w-6"
-                      : "bg-border w-2 hover:bg-primary/50"
+                      ? "bg-accent w-6"
+                      : "bg-border w-2 hover:bg-accent/60"
                   }`}
                   aria-label={`画像 ${index + 1} に移動`}
                 />

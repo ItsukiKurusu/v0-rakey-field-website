@@ -21,9 +21,9 @@ export function CompanySection() {
       <div className="container mx-auto px-6">
         <FadeInUp>
           <div className="flex items-center gap-4 mb-3 justify-center">
-            <div className="h-px w-8 bg-primary" />
-            <span className="text-primary text-xs tracking-[0.25em] uppercase font-medium">Company</span>
-            <div className="h-px w-8 bg-primary" />
+            <div className="h-px w-8 bg-destructive" />
+            <span className="text-destructive text-xs tracking-[0.25em] uppercase font-medium">Company</span>
+            <div className="h-px w-8 bg-destructive" />
           </div>
           <h2 className="text-3xl md:text-4xl font-bold text-foreground text-center mb-16">会社概要</h2>
         </FadeInUp>
