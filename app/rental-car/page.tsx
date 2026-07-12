@@ -57,6 +57,13 @@ export default function RentalCarPage() {
               <p className="text-2xl md:text-3xl font-bold text-primary mb-3">
                 1日〜でもOK！
               </p>
+              <motion.p
+                className="inline-block bg-primary text-primary-foreground text-2xl md:text-4xl font-black px-8 py-4 rounded-2xl mb-5 shadow-[0_0_40px_rgba(0,0,0,0.35)] border-2 border-background/80"
+                animate={{ scale: [1, 1.05, 1] }}
+                transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+              >
+                24時間3,300円(税込)〜貸し出します！
+              </motion.p>
               <p className="text-background/70 text-lg max-w-xl mx-auto">
                 必要な時に、必要なだけ。<br className="md:hidden" />
                 短期から長期まで柔軟に対応いたします。
