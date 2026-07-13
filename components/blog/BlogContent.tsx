@@ -1,6 +1,19 @@
 import Link from "next/link"
+import Image from "next/image"
 import { ArrowRight } from "lucide-react"
 import type { BlogContentBlock } from "@/lib/blog-posts"
+
+function renderInline(text: string) {
+  return text.split(/(\*\*[^*]+\*\*)/g).map((part, i) =>
+    part.startsWith("**") && part.endsWith("**") ? (
+      <strong key={i} className="font-bold text-foreground">
+        {part.slice(2, -2)}
+      </strong>
+    ) : (
+      part
+    ),
+  )
+}
 
 export function BlogContent({ blocks }: { blocks: BlogContentBlock[] }) {
   return (
@@ -25,8 +38,32 @@ export function BlogContent({ blocks }: { blocks: BlogContentBlock[] }) {
         if (block.type === "paragraph") {
           return (
             <p key={i} className="text-base text-foreground/80 leading-relaxed">
-              {block.text}
+              {renderInline(block.text)}
             </p>
+          )
+        }
+
+        if (block.type === "image") {
+          return (
+            <div key={i} className="rounded-2xl overflow-hidden shadow-md">
+              <Image
+                src={block.src}
+                alt={block.alt}
+                width={block.width}
+                height={block.height}
+                className="w-full h-auto"
+                sizes="(max-width: 768px) 100vw, 700px"
+              />
+            </div>
+          )
+        }
+
+        if (block.type === "video") {
+          return (
+            <div key={i} className="rounded-2xl overflow-hidden shadow-md">
+              {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+              <video src={block.src} controls className="w-full h-auto" />
+            </div>
           )
         }
 
