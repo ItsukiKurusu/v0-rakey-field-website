@@ -30,13 +30,13 @@ export function ConceptSection() {
           <FadeInUp delay={0.25}>
             <div className="space-y-7">
               <p className="text-lg text-muted-foreground leading-[1.9]">
-                私たちは、この地域（「堺市中区」「陶器」、「福田」）の人々のカーライフを一生涯サポートします。
+                私たちは、この地域（堺市中区）の人々のカーライフを一生涯サポートします。
               </p>
               <p className="text-lg text-muted-foreground leading-[1.9]">
                 子どもたちが集い、遊び、大人になって車を買う、そして車の相談で立ち寄る。そんな場所を目指しています。
               </p>
               <p className="text-lg text-muted-foreground leading-[1.9]">
-                陶器の人々の人生における車の相談事をトータル的にサポートします。
+                堺市中区の人々の人生における車の相談事をトータル的にサポートします。
               </p>
             </div>
           </FadeInUp>
