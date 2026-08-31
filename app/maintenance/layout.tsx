@@ -41,6 +41,53 @@ const jsonLd = {
   },
 }
 
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: '堺市で車検を受けるにはどうすればいいですか？',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'お電話（072-339-4549）またはお問い合わせフォームからご予約ください。車検の時期が近づいたらお気軽にご連絡ください。',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '車検の費用の目安を教えてください。',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: '車種や状態により異なります。まずはお電話にてお気軽にご相談ください（TEL: 072-339-4549）。',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '車検はどのくらいの期間かかりますか？',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: '車両の状態により異なりますが、通常の車検は1〜2日程度です。詳しくはお問い合わせください。',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '板金修理の相談もできますか？',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'はい、ぶつけてしまった傷やへこみも丁寧に対応いたします。交通事故対応・保険手続きのご相談も承ります。',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '車検と同時にメンテナンスもお願いできますか？',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'はい、車検と合わせて定期点検やオイル交換などのメンテナンスも対応可能です。ご希望の内容をお申し付けください。',
+      },
+    },
+  ],
+}
+
 export default function MaintenanceLayout({ children }: { children: ReactNode }) {
   return (
     <>
@@ -48,6 +95,10 @@ export default function MaintenanceLayout({ children }: { children: ReactNode })
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
     </>
   )

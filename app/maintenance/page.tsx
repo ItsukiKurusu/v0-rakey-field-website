@@ -38,6 +38,29 @@ const services = [
   },
 ]
 
+const faqs = [
+  {
+    q: "堺市で車検を受けるにはどうすればいいですか？",
+    a: "お電話（072-339-4549）またはお問い合わせフォームからご予約ください。車検の時期が近づいたらお気軽にご連絡ください。",
+  },
+  {
+    q: "車検はどのくらいの期間かかりますか？",
+    a: "車両の状態により異なりますが、通常の車検は1〜2日程度です。詳しくはお問い合わせください。",
+  },
+  {
+    q: "車検の費用の目安を教えてください。",
+    a: "車種や状態により異なります。まずはお電話にてお気軽にご相談ください。お見積りは無料です。",
+  },
+  {
+    q: "板金修理の相談もできますか？",
+    a: "はい、ぶつけてしまった傷やへこみも丁寧に対応いたします。交通事故対応・保険手続きのご相談も承ります。",
+  },
+  {
+    q: "車検と同時にメンテナンスもお願いできますか？",
+    a: "はい、車検と合わせてオイル交換などのメンテナンスも対応可能です。ご希望の内容をお申し付けください。",
+  },
+]
+
 export default function MaintenancePage() {
   return (
     <>
@@ -150,6 +173,32 @@ export default function MaintenancePage() {
                     <h3 className="text-lg font-bold text-foreground mb-2">{s.title}</h3>
                     <p className="text-muted-foreground text-sm leading-relaxed">{s.description}</p>
                   </motion.div>
+                </FadeInUp>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* FAQ */}
+        <section className="py-20 bg-secondary">
+          <div className="container mx-auto px-6">
+            <FadeInUp>
+              <div className="flex items-center gap-4 mb-3 justify-center">
+                <div className="h-px w-8 bg-destructive" />
+                <span className="text-destructive text-xs tracking-[0.25em] uppercase font-medium">FAQ</span>
+                <div className="h-px w-8 bg-destructive" />
+              </div>
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground text-center mb-12">
+                よくある質問
+              </h2>
+            </FadeInUp>
+            <div className="max-w-2xl mx-auto space-y-4">
+              {faqs.map((faq, i) => (
+                <FadeInUp key={i} delay={i * 0.07}>
+                  <div className="bg-card rounded-2xl border border-border p-6">
+                    <p className="font-bold text-foreground mb-2">Q. {faq.q}</p>
+                    <p className="text-sm text-muted-foreground leading-relaxed">A. {faq.a}</p>
+                  </div>
                 </FadeInUp>
               ))}
             </div>

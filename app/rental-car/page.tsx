@@ -23,6 +23,29 @@ const carPhotos = [
   { src: "/images/kei-car.jpg", alt: "レンタカー 軽自動車", label: "軽自動車" },
 ]
 
+const faqs = [
+  {
+    q: "堺市でレンタカーを借りるにはどうすればいいですか？",
+    a: "お電話（072-339-4549）またはお問い合わせフォームからご連絡ください。ご希望の日程と車種をお伝えいただければスムーズにご案内します。",
+  },
+  {
+    q: "1日だけのレンタカー利用はできますか？",
+    a: "はい、1日からご利用いただけます。短期から長期まで柔軟に対応いたしますのでお気軽にご相談ください。",
+  },
+  {
+    q: "当日でもレンタカーを借りられますか？",
+    a: "空き状況によりますが、当日のご相談も大歓迎です。まずはお電話ください。",
+  },
+  {
+    q: "レンタカーに保険はついていますか？",
+    a: "はい、保険付きでご提供しておりますので安心してご利用いただけます。",
+  },
+  {
+    q: "どんな車が借りられますか？",
+    a: "軽自動車からコンパクトカーまでご用意しております。時期により車両は異なりますので詳しくはお電話にてご確認ください。",
+  },
+]
+
 export default function RentalCarPage() {
   return (
     <>
@@ -159,6 +182,32 @@ export default function RentalCarPage() {
                 ※ 車両は時期により異なります。詳しくはお電話にてご確認ください。
               </p>
             </FadeInUp>
+          </div>
+        </section>
+
+        {/* FAQ */}
+        <section className="py-20 bg-background">
+          <div className="container mx-auto px-6">
+            <FadeInUp>
+              <div className="flex items-center gap-4 mb-3 justify-center">
+                <div className="h-px w-8 bg-destructive" />
+                <span className="text-destructive text-xs tracking-[0.25em] uppercase font-medium">FAQ</span>
+                <div className="h-px w-8 bg-destructive" />
+              </div>
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground text-center mb-12">
+                よくある質問
+              </h2>
+            </FadeInUp>
+            <div className="max-w-2xl mx-auto space-y-4">
+              {faqs.map((faq, i) => (
+                <FadeInUp key={i} delay={i * 0.07}>
+                  <div className="bg-card rounded-2xl border border-border p-6">
+                    <p className="font-bold text-foreground mb-2">Q. {faq.q}</p>
+                    <p className="text-sm text-muted-foreground leading-relaxed">A. {faq.a}</p>
+                  </div>
+                </FadeInUp>
+              ))}
+            </div>
           </div>
         </section>
 

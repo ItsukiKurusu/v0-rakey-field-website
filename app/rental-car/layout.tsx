@@ -54,6 +54,53 @@ const jsonLd = {
   ],
 }
 
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'レンタカーの料金はどのくらいですか？',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: '車種や期間により異なります。格安でご提供しておりますのでお気軽にお電話ください（TEL: 072-339-4549）。',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '当日でもレンタカーを借りられますか？',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'はい、当日のご相談も大歓迎です。空き状況によりご案内いたしますので、まずはお電話ください。',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '堺市でレンタカーを借りるにはどうすればいいですか？',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'お電話（072-339-4549）またはお問い合わせフォームからご連絡ください。ご希望の日程・車種をお伝えいただければスムーズにご案内できます。',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'レンタカーに保険はついていますか？',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'はい、保険付きでご提供しておりますので安心してご利用いただけます。詳細はお問い合わせください。',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '1日だけのレンタカー利用はできますか？',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'はい、1日からご利用いただけます。短期から長期まで柔軟に対応いたします。',
+      },
+    },
+  ],
+}
+
 export default function RentalCarLayout({ children }: { children: ReactNode }) {
   return (
     <>
@@ -61,6 +108,10 @@ export default function RentalCarLayout({ children }: { children: ReactNode }) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
     </>
   )
