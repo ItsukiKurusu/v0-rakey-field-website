@@ -5,6 +5,7 @@ import * as THREE from "three"
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js"
 import { HDRLoader } from "three/addons/loaders/HDRLoader.js"
 import { MeshoptDecoder } from "three/addons/libs/meshopt_decoder.module.js"
+import { createGarageModel, type GarageModel } from "@/components/garage3d/createGarage"
 
 const BASE = "/hero66/"
 
@@ -28,6 +29,8 @@ export type HeroAssets = {
   ground: SurfaceMaps
   road: SurfaceMaps
   rock: { geometry: THREE.BufferGeometry; material: THREE.Material }
+  /** 終点の実店舗のガレージ（写真から起こしたモデル） */
+  garage: GarageModel
   dispose: () => void
 }
 
@@ -74,12 +77,13 @@ export async function loadHeroAssets(
     return { map, normalMap, armMap }
   }
 
-  const [sunset, dusk, ground, road, rockGltf] = await Promise.all([
+  const [sunset, dusk, ground, road, rockGltf, garage] = await Promise.all([
     loadSky(meta.sky.sunset),
     loadSky(meta.sky.dusk),
     loadSurface(meta.ground),
     loadSurface(meta.road),
     gltfLoader.loadAsync(BASE + meta.rock),
+    createGarageModel(),
   ])
 
   let rockMesh: THREE.Mesh | null = null
@@ -101,7 +105,9 @@ export async function loadHeroAssets(
     ground,
     road,
     rock: { geometry, material },
+    garage,
     dispose() {
+      garage.dispose()
       textures.forEach((t) => t.dispose())
       geometry.dispose()
       rm.geometry.dispose()

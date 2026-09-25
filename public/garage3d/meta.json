@@ -1,0 +1,82 @@
+{
+  "sign-acdelco": {
+    "file": "sign-acdelco.webp",
+    "aspect": 1.5065,
+    "alpha": false
+  },
+  "sign-405": {
+    "file": "sign-405.webp",
+    "aspect": 1.3211,
+    "alpha": false
+  },
+  "sign-warning": {
+    "file": "sign-warning.webp",
+    "aspect": 0.7909,
+    "alpha": false
+  },
+  "sticker-24h": {
+    "file": "sticker-24h.webp",
+    "aspect": 1.151,
+    "alpha": false
+  },
+  "sticker-security": {
+    "file": "sticker-security.webp",
+    "aspect": 1.0612,
+    "alpha": false
+  },
+  "plate-illinois": {
+    "file": "plate-illinois.webp",
+    "aspect": 1.9464,
+    "alpha": false
+  },
+  "sign-pig-xing": {
+    "file": "sign-pig-xing.webp",
+    "aspect": 0.9621,
+    "alpha": true
+  },
+  "sign-peoples-meat": {
+    "file": "sign-peoples-meat.webp",
+    "aspect": 1.4536,
+    "alpha": false
+  },
+  "sign-security-alert": {
+    "file": "sign-security-alert.webp",
+    "aspect": 1.088,
+    "alpha": true
+  },
+  "sign-private": {
+    "file": "sign-private.webp",
+    "aspect": 1.5677,
+    "alpha": false
+  },
+  "sign-american-pig": {
+    "file": "sign-american-pig.webp",
+    "aspect": 1.0714,
+    "alpha": false
+  },
+  "ashtray-front": {
+    "file": "ashtray-front.webp",
+    "aspect": 0.3891,
+    "alpha": false
+  },
+  "interior-back": {
+    "file": "interior-back.webp",
+    "aspect": 2.0291,
+    "alpha": false
+  },
+  "sign-hotwheels": {
+    "file": "sign-hotwheels.webp",
+    "aspect": 3.7347,
+    "alpha": false
+  },
+  "box-tamiya": {
+    "file": "box-tamiya.webp",
+    "aspect": 1.1728,
+    "alpha": false
+  },
+  "sign-castrol": {
+    "file": "sign-castrol.webp",
+    "aspect": 0.7255,
+    "alpha": true
+  }
+}

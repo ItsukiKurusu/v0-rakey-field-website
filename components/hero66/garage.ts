@@ -1,7 +1,9 @@
-// 終点：RAKEY FIELD のガレージ。実際のお店（白い壁に紺の縁取り・切妻屋根・青い看板・シャッター・
-// 人工芝の敷地）を下敷きに、ルート66のモーテル風のポールサイン（ネオン）を立てる。
+// 終点：RAKEY FIELD のガレージ。建物は実店舗を写真から起こしたモデル（components/garage3d）で、
+// そこへルート66のモーテル風のポールサイン（ネオン）、道の向かいの街灯、人工芝の敷地を足す。
 // 建物の正面は +Z（道の側）。
 import * as THREE from "three"
+import type { GarageModel } from "@/components/garage3d/createGarage"
+import { GARAGE_SPEC } from "@/components/garage3d/spec"
 import { GARAGE } from "./constants"
 import type { Road } from "./road"
 
@@ -77,37 +79,6 @@ function neonTexture(on: boolean) {
   })
 }
 
-/** 実際のお店の青い看板（白い文字） */
-function shopSignTexture() {
-  return canvasTex(1024, 400, (g) => {
-    g.fillStyle = "#f4f6f8"
-    g.fillRect(0, 0, 1024, 400)
-    g.fillStyle = "#1f43a8"
-    g.fillRect(18, 18, 988, 364)
-    g.strokeStyle = "#f4f6f8"
-    g.lineWidth = 6
-    g.strokeRect(40, 40, 944, 320)
-    g.fillStyle = "#f4f6f8"
-    g.textAlign = "center"
-    g.textBaseline = "middle"
-    fitText(g, "RAKEY FIELD", 860, 150, (px) => `bold ${px}px Georgia, 'Times New Roman', serif`)
-    g.fillText("RAKEY FIELD", 512, 210)
-  })
-}
-
-function shutterTexture() {
-  return canvasTex(256, 256, (g) => {
-    for (let y = 0; y < 256; y += 16) {
-      const grad = g.createLinearGradient(0, y, 0, y + 16)
-      grad.addColorStop(0, "#3a5aa8")
-      grad.addColorStop(0.6, "#243f86")
-      grad.addColorStop(1, "#162a5c")
-      g.fillStyle = grad
-      g.fillRect(0, y, 256, 16)
-    }
-  })
-}
-
 function turfTexture() {
   return canvasTex(
     256,
@@ -126,97 +97,31 @@ function turfTexture() {
         g.fillRect(x, 0, 32, 256)
       }
     },
-    [6, 4],
+    [8, 3],
   )
 }
 
-export function createGarage(road: Road) {
+export function createGarage(road: Road, model: GarageModel) {
   const group = new THREE.Group()
-  group.name = "garage"
-  const { width: W, depth: D, height: H } = GARAGE
+  group.name = "garageSite"
   const textures: THREE.Texture[] = []
   const tex = <T extends THREE.Texture>(t: T) => (textures.push(t), t)
+  const front = GARAGE_SPEC.depth / 2
+  const W = GARAGE_SPEC.width
+  // 建物の正面（z = front）から道の路肩の手前まで
+  const lotDepth = GARAGE.side - front - 5.6
 
-  const white = new THREE.MeshStandardMaterial({ color: "#eceef0", roughness: 0.82 })
-  const navy = new THREE.MeshStandardMaterial({ color: "#1c2a55", roughness: 0.6 })
-  const roofMat = new THREE.MeshStandardMaterial({ color: "#2b2f36", roughness: 0.75 })
-  const glassMat = new THREE.MeshStandardMaterial({
-    color: "#1a2330",
-    roughness: 0.15,
-    metalness: 0.4,
-    emissive: new THREE.Color("#ffb865"),
-    emissiveIntensity: 0,
-  })
+  group.add(model.group)
 
-  // 壁と紺の縁取り
-  const box = (w: number, h: number, d: number, m: THREE.Material, x: number, y: number, z: number) => {
-    const mesh = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m)
-    mesh.position.set(x, y, z)
-    mesh.castShadow = mesh.receiveShadow = true
-    group.add(mesh)
-    return mesh
-  }
-  box(W, H, D, white, 0, H / 2, 0)
-  box(W + 0.04, 0.4, D + 0.04, navy, 0, 0.2, 0) // 腰の帯
-  box(W + 0.06, 0.18, D + 0.06, navy, 0, H - 0.09, 0) // 軒の帯
-  for (const x of [-W / 2, W / 2]) box(0.18, H, 0.18, navy, x, H / 2, D / 2) // 角の柱
-
-  // 切妻屋根（正面に三角が見える）
-  const roofH = 1.5
-  const tri = new THREE.Shape()
-  tri.moveTo(-W / 2 - 0.35, 0)
-  tri.lineTo(W / 2 + 0.35, 0)
-  tri.lineTo(0, roofH)
-  tri.closePath()
-  const roofGeo = new THREE.ExtrudeGeometry(tri, { depth: D + 0.6, bevelEnabled: false })
-  roofGeo.translate(0, H, -D / 2 - 0.3)
-  const roof = new THREE.Mesh(roofGeo, roofMat)
-  roof.castShadow = true
-  group.add(roof)
-  // 妻面（白）と紺の破風
-  const gable = new THREE.Shape()
-  gable.moveTo(-W / 2, 0)
-  gable.lineTo(W / 2, 0)
-  gable.lineTo(0, roofH * (W / 2) / (W / 2 + 0.35))
-  gable.closePath()
-  const gableMesh = new THREE.Mesh(new THREE.ShapeGeometry(gable), white)
-  gableMesh.position.set(0, H, D / 2 + 0.31)
-  group.add(gableMesh)
-
-  // シャッター（右）、窓とドア（左）
-  const shutter = new THREE.Mesh(
-    new THREE.PlaneGeometry(3.8, 3.3),
-    new THREE.MeshStandardMaterial({ map: tex(shutterTexture()), roughness: 0.5, metalness: 0.3 }),
-  )
-  shutter.position.set(2.6, 1.65 + 0.02, D / 2 + 0.01)
-  group.add(shutter)
-  const windowMesh = new THREE.Mesh(new THREE.PlaneGeometry(2.4, 1.3), glassMat)
-  windowMesh.position.set(-3.1, 1.75, D / 2 + 0.01)
-  group.add(windowMesh)
-  box(2.6, 0.1, 0.06, navy, -3.1, 1.08, D / 2 + 0.03)
-  box(2.6, 0.1, 0.06, navy, -3.1, 2.42, D / 2 + 0.03)
-
-  // 実際のお店と同じ青い看板
-  const signMat = new THREE.MeshStandardMaterial({ map: tex(shopSignTexture()), roughness: 0.5 })
-  const sign = new THREE.Mesh(new THREE.PlaneGeometry(3.4, 1.33), signMat)
-  sign.position.set(-2.4, 3.25, D / 2 + 0.02)
-  group.add(sign)
-
-  // 壁の灯り（シャッターの上）
-  const wallLampMat = new THREE.MeshStandardMaterial({ color: "#333", emissive: new THREE.Color("#ffd29a"), emissiveIntensity: 0 })
-  box(0.6, 0.18, 0.3, wallLampMat, 2.6, 3.6, D / 2 + 0.15)
-
-  // 人工芝の敷地（実際のお店も芝）
-  const turfMat = new THREE.MeshStandardMaterial({ map: tex(turfTexture()), roughness: 1 })
-  // 建物の正面（z = D/2）から道の路肩の手前まで
-  const lotDepth = GARAGE.side - D / 2 - 5.8
-  const turf = new THREE.Mesh(new THREE.PlaneGeometry(W + 8, lotDepth), turfMat)
+  // 人工芝の敷地（実際のお店も芝）。建物の前のコンクリートの左右と手前
+  const turfMat = new THREE.MeshStandardMaterial({ map: tex(turfTexture()), roughness: 1, envMapIntensity: 0.4 })
+  const turf = new THREE.Mesh(new THREE.PlaneGeometry(W + 12, lotDepth + 1.5), turfMat)
   turf.rotation.x = -Math.PI / 2
-  turf.position.set(0, 0.012, D / 2 + lotDepth / 2)
+  turf.position.set(0, 0.003, front + (lotDepth + 1.5) / 2 - 1.5)
   turf.receiveShadow = true
   group.add(turf)
 
-  // ポールサイン（道寄りの角）
+  // ポールサイン（敷地の道寄りの角。停まった車の後ろに立つ側）
   const neonOffTex = tex(neonTexture(false))
   const neonOnTex = tex(neonTexture(true))
   const neonMat = new THREE.MeshStandardMaterial({
@@ -239,20 +144,15 @@ export function createGarage(road: Road) {
   faceBack.position.z = -0.16
   post.castShadow = board.castShadow = true
   pole.add(post, board, face, faceBack)
-  // 敷地の道寄りの角（路肩の外）。停まった車の後ろに立つ側（建物の +X＝道の進む向きの逆）に置く
-  pole.position.set(W / 2 + 1.5, 0, D / 2 + lotDepth - 0.8)
+  pole.position.set(W / 2 + 2.6, 0, front + lotDepth - 0.6)
   // 停まった車の斜め前（最後のカメラ）から正面が見える向き。建物の座標では 前 = -X、右 = -Z
   pole.rotation.y = -0.72
   group.add(pole)
-
-  // ネオンの照り返し
   const neonLight = new THREE.PointLight("#ff4a3a", 0, 22, 1.6)
   neonLight.position.set(pole.position.x, 5.1, pole.position.z + 1.2)
-  const wallLight = new THREE.PointLight("#ffcf94", 0, 16, 1.6)
-  wallLight.position.set(2.6, 3.4, D / 2 + 1.2)
-  group.add(neonLight, wallLight)
+  group.add(neonLight)
 
-  // 道の向かい側の街灯（停まった車を照らす）。建物の座標で、道の反対側
+  // 道の向かい側の街灯（停まった車を照らす）
   const lampPost = new THREE.Group()
   const lampPole = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.1, 6, 10), poleMat)
   lampPole.position.y = 3
@@ -276,17 +176,19 @@ export function createGarage(road: Road) {
   const n = f.right.clone().negate()
   group.rotation.y = Math.atan2(n.x, n.z)
 
-  /** ネオンを灯す（0..1）。灯る瞬間は数回またたく */
+  // 昼（走っている間）は室内の灯りを弱く
+  model.setInteriorLights(0.3)
+
+  /** ネオンと室内の灯りを灯す（0..1）。ネオンは灯る瞬間に数回またたく */
   const setNeon = (k: number, time: number) => {
     const flicker = k > 0 && k < 1 ? (Math.sin(time * 53) > 0.2 ? 1 : 0.25) : 1
     const v = k * flicker
     neonMat.emissiveIntensity = 1.5 * v // 強すぎると文字がにじんで読めない
     neonLight.intensity = 26 * v
-    wallLampMat.emissiveIntensity = 1.1 * k
-    wallLight.intensity = 5 * k
-    glassMat.emissiveIntensity = 0.45 * k
     lampHeadMat.emissiveIntensity = 3 * k
-    streetLight.intensity = 70 * k
+    streetLight.intensity = 45 * k
+    // 夜はシャッターの開口から暖かい光が漏れるように
+    model.setInteriorLights(0.3 + 0.7 * k, 1 + 3 * k)
   }
 
   return {
@@ -294,6 +196,7 @@ export function createGarage(road: Road) {
     setNeon,
     dispose() {
       textures.forEach((t) => t.dispose())
+      group.remove(model.group) // モデルは assets 側で解放する
       group.traverse((o) => {
         const mesh = o as THREE.Mesh
         if (!mesh.isMesh) return

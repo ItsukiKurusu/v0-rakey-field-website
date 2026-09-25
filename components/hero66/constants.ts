@@ -66,8 +66,8 @@ export const CAMERA_KEYS: Array<{ p: number; pos: [number, number, number]; look
   { p: 0.675, pos: [1.2, 2.3, -8.2], look: [0.5, 0.8, 0.3], fov: 40 }, // 前から後ろへ回る途中（車の外を大きく回る）
   { p: 0.74, pos: [-6.2, 1.35, -1.5], look: [7, 0.9, 0.3], fov: 40 }, // 夜の道をライトで照らす
   { p: 0.86, pos: [-3.2, 2.7, -7.4], look: [2.5, 1.1, 3], fov: 40 }, // ガレージへ近づく
-  { p: 0.95, pos: [9.6, 1.9, -9.4], look: [-1.6, 2.0, 3.6], fov: 42 }, // 停車。ガレージとネオンを背に斜め前
-  { p: 1.0, pos: [9.0, 1.8, -8.9], look: [-1.6, 2.0, 3.6], fov: 42 },
+  { p: 0.95, pos: [7.2, 1.7, -6.4], look: [-1.8, 1.7, 4.6], fov: 42 }, // 停車。実店舗のガレージとネオンを背に斜め前
+  { p: 1.0, pos: [6.8, 1.65, -6.0], look: [-1.8, 1.7, 4.6], fov: 42 },
 ]
 
 /** 演出を止めた人に見せる1枚（ネオンの灯った完成形） */
@@ -92,8 +92,8 @@ export const BILLBOARDS = [
 /** 看板の置き方（道の中心からの距離・高さ） */
 export const BILLBOARD_LAYOUT = { side: 11, height: 3.2, width: 7.2, aspect: 0.42 } as const
 
-/** ガレージ（停車位置の右手）。ahead は停車位置から前へ、side は道の中心から右へ */
-export const GARAGE = { ahead: 1.5, side: 14, width: 11, depth: 8, height: 4.2 } as const
+/** ガレージ（停車位置の右手）。ahead は停車位置から前へ、side は道の中心から建物の中心まで右へ */
+export const GARAGE = { ahead: 1.5, side: 9.4 } as const
 
 /**
  * 空。夕暮れとたそがれは実写（HDRI・scripts/bake-hero-assets.mjs）、夜の上空だけ自前のグラデーション。

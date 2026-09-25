@@ -50,12 +50,12 @@ export function createHeroScene(renderer: THREE.WebGLRenderer, profile: DevicePr
   const roadMesh = createRoadMesh(road, assets.road)
   const terrain = createTerrain(road, assets.ground)
   const signs = createSigns(road)
-  const garage = createGarage(road)
+  const garage = createGarage(road, assets.garage)
 
   // 看板・標識・ガレージの周りには小物を置かない
   const keep: Array<{ x: number; z: number; r: number }> = []
   signs.group.children.forEach((o) => keep.push({ x: o.position.x, z: o.position.z, r: 7 }))
-  keep.push({ x: garage.group.position.x, z: garage.group.position.z, r: 17 })
+  keep.push({ x: garage.group.position.x, z: garage.group.position.z, r: 13 })
   const roadside = createRoadside(road, keep, assets.rock)
 
   const sky = createSky(assets.sky)
