@@ -40,7 +40,8 @@
   "groundRocks": {
     "diff": "tex/dry_ground_rocks_diff.webp",
     "arm": "tex/dry_ground_rocks_arm.webp",
-    "nor": "tex/dry_ground_rocks_nor.webp"
+    "nor": "tex/dry_ground_rocks_nor.webp",
+    "h": "tex/dry_ground_rocks_h.webp"
   },
   "shoulder": {
     "diff": "tex/gravel_road_diff.webp",
@@ -52,7 +53,7 @@
     "arm": "tex/cracked_concrete_arm.webp",
     "nor": "tex/cracked_concrete_nor.webp"
   },
-  "noise": "tex/noise.png",
+  "noise": "tex/noise.webp",
   "foliage": {
     "grass": "grass.glb",
     "grassAlpha": "tex/grass_alpha.webp",

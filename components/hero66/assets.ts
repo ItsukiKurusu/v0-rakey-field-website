@@ -19,7 +19,7 @@ type SkyMeta = {
   bandLow: number
   bandHigh: number
 }
-type SurfaceMeta = { diff: string; arm: string; nor: string }
+type SurfaceMeta = { diff: string; arm: string; nor: string; h?: string }
 type Meta = {
   sky: { sunset: SkyMeta; dusk: SkyMeta }
   ground: SurfaceMeta
@@ -33,7 +33,7 @@ type Meta = {
 }
 export type Prop = { geometry: THREE.BufferGeometry; material: THREE.Material }
 
-export type SurfaceMaps = { map: THREE.Texture; normalMap: THREE.Texture; armMap: THREE.Texture }
+export type SurfaceMaps = { map: THREE.Texture; normalMap: THREE.Texture; armMap: THREE.Texture; heightMap?: THREE.Texture }
 export type SkyAsset = SkyMeta & { bandTex: THREE.Texture; envTex: THREE.Texture }
 
 export type HeroAssets = {
@@ -116,8 +116,13 @@ export async function loadHeroAssets(
   }
 
   const loadSurface = async (s: SurfaceMeta): Promise<SurfaceMaps> => {
-    const [map, normalMap, armMap] = await Promise.all([loadTex(s.diff, true), loadTex(s.nor, false), loadTex(s.arm, false)])
-    return { map, normalMap, armMap }
+    const [map, normalMap, armMap, heightMap] = await Promise.all([
+      loadTex(s.diff, true),
+      loadTex(s.nor, false),
+      loadTex(s.arm, false),
+      s.h ? loadTex(s.h, false) : Promise.resolve(undefined),
+    ])
+    return heightMap ? { map, normalMap, armMap, heightMap } : { map, normalMap, armMap }
   }
 
   const [sunset, dusk, ground, road, groundRocks, shoulder, concrete, noise, rockGltf, grassGltf, grassAlpha, shrubGltf] =

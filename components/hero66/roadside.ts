@@ -28,8 +28,8 @@ export function createRoadside(
   keepouts: Keepout[],
   props: { rock: Prop; grass: Prop[]; shrub: Prop },
   isMobile: boolean,
-  /** 地面の高さ（起伏の上に置くため） */
-  heightAt: (x: number, z: number) => number,
+  /** 地面の高さ（起伏の上に置くため）。c は道の中心からの距離 */
+  groundAt: (x: number, z: number, c: number) => number,
 ) {
   const group = new THREE.Group()
   group.name = "roadside"
@@ -114,7 +114,7 @@ export function createRoadside(
         const k = o.scale[0] + r() * (o.scale[1] - o.scale[0])
         const sq = o.squash ? o.squash[0] + r() * (o.squash[1] - o.squash[0]) : 1
         q.setFromAxisAngle(up, r() * Math.PI * 2)
-        p.y = heightAt(p.x, p.z) - 0.03 * k // 少し埋める（浮いて見えないように）
+        p.y = groundAt(p.x, p.z, d) - 0.03 * k // 少し埋める（浮いて見えないように）
         m.compose(p, q, s.set(k, k * sq, k))
         inst.setMatrixAt(n, m)
         if (o.tint) inst.setColorAt(n, tmpColor.lerpColors(o.tint[0], o.tint[1], r()))

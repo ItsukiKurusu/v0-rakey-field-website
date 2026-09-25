@@ -235,14 +235,20 @@ async function normalFromDisp(file, out, size, strength) {
   await sharp(px, { raw: { width: W, height: H, channels: 3 } }).webp({ quality: 88 }).toFile(out)
 }
 
-async function bakeSurface(name, { size, normalSize, strength }) {
+async function bakeSurface(name, { size, normalSize, strength, height = false }) {
   const dir = path.join(SRC, `${name}_1k`, "textures")
   const out = (k) => path.join(OUT, "tex", `${name}_${k}.webp`)
   await sharp(path.join(dir, `${name}_diff_1k.jpg`)).resize(size, size).webp({ quality: 82 }).toFile(out("diff"))
   // arm = R: 環境遮蔽、G: 粗さ、B: 金属。three は roughnessMap の G、aoMap の R を読むのでそのまま使える
   await sharp(path.join(dir, `${name}_arm_1k.jpg`)).resize(normalSize, normalSize).webp({ quality: 82 }).toFile(out("arm"))
   await normalFromDisp(path.join(dir, `${name}_disp_1k.png`), out("nor"), normalSize, strength)
-  return { diff: `tex/${name}_diff.webp`, arm: `tex/${name}_arm.webp`, nor: `tex/${name}_nor.webp` }
+  const res = { diff: `tex/${name}_diff.webp`, arm: `tex/${name}_arm.webp`, nor: `tex/${name}_nor.webp` }
+  if (height) {
+    // 高さ（視差マッピングとくぼみの陰に使う）。値の幅いっぱいに広げて 8bit へ
+    await sharp(path.join(dir, `${name}_disp_1k.png`)).extractChannel(0).resize(normalSize, normalSize).normalise().webp({ quality: 90 }).toFile(out("h"))
+    res.h = `tex/${name}_h.webp`
+  }
+  return res
 }
 
 // ── 地面のむら用のノイズ（R/G/B に周波数の違う繰り返しノイズ。端がつながる） ──
@@ -280,8 +286,8 @@ async function bakeNoise() {
       px[i + 2] = Math.round(B(x / N, y / N) * 255)
     }
   }
-  await sharp(px, { raw: { width: N, height: N, channels: 3 } }).png().toFile(path.join(OUT, "tex", "noise.png"))
-  return "tex/noise.png"
+  await sharp(px, { raw: { width: N, height: N, channels: 3 } }).webp({ quality: 92 }).toFile(path.join(OUT, "tex", "noise.webp"))
+  return "tex/noise.webp"
 }
 
 // ── 草と低木のモデル ───────────────────────────────────────
@@ -323,10 +329,10 @@ const meta = {
     // たそがれの空は夜に暗くして使う（暗い所を持ち上げるとブロックが見えるので画質を上げる）
     dusk: bakeSky("toposcope_sunset", { bandWidth: 4096, quality: 92 }),
   },
-  ground: await bakeSurface("red_sand", { size: 1024, normalSize: 512, strength: 10 }),
+  ground: await bakeSurface("red_sand", { size: 1024, normalSize: 512, strength: 16 }),
   road: await bakeSurface("asphalt_02", { size: 1024, normalSize: 512, strength: 6 }),
   // 地面の2層目（小石まじりの乾いた土）・路肩の土・ガレージ前のひび割れたコンクリート
-  groundRocks: await bakeSurface("dry_ground_rocks", { size: 1024, normalSize: 512, strength: 10 }),
+  groundRocks: await bakeSurface("dry_ground_rocks", { size: 1024, normalSize: 512, strength: 14, height: true }),
   shoulder: await bakeSurface("gravel_road", { size: 1024, normalSize: 512, strength: 8 }),
   concrete: await bakeSurface("cracked_concrete", { size: 1024, normalSize: 512, strength: 6 }),
   noise: await bakeNoise(),

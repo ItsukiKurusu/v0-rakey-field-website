@@ -48,7 +48,7 @@ export function createHeroScene(renderer: THREE.WebGLRenderer, profile: DevicePr
 
   const road = createRoad()
   const roadMesh = createRoadMesh(road, assets.road, assets.shoulder, assets.noise)
-  const terrain = createTerrain(road, assets.ground, assets.groundRocks, assets.noise)
+  const terrain = createTerrain(road, assets.ground, assets.groundRocks, assets.noise, profile.isMobile)
   const signs = createSigns(road)
   const garage = createGarage(road, assets.garage)
 
@@ -56,7 +56,7 @@ export function createHeroScene(renderer: THREE.WebGLRenderer, profile: DevicePr
   const keep: Array<{ x: number; z: number; r: number }> = []
   signs.group.children.forEach((o) => keep.push({ x: o.position.x, z: o.position.z, r: 7 }))
   keep.push({ x: garage.group.position.x, z: garage.group.position.z, r: 13 })
-  const roadside = createRoadside(road, keep, { rock: assets.rock, grass: assets.grass, shrub: assets.shrub }, profile.isMobile, terrain.heightAt)
+  const roadside = createRoadside(road, keep, { rock: assets.rock, grass: assets.grass, shrub: assets.shrub }, profile.isMobile, terrain.groundAt)
 
   const sky = createSky(assets.sky)
   const impala = createImpala()
