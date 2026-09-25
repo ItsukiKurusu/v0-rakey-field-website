@@ -50,6 +50,7 @@ export default function HeroCanvas({ onReady }: Props) {
       const hero = createHeroScene(gl.renderer, profile)
       const size = gl.applyResolution()
       hero.resize(size.width, size.height)
+      hero.warmup()
 
       const exposeDev = (setProgress: (p: number) => number) => {
         if (process.env.NODE_ENV !== "development") return

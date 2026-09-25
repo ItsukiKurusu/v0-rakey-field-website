@@ -9,6 +9,16 @@ function fontFamily(cssVar: string, fallback: string) {
   return v ? `${v}, ${fallback}` : fallback
 }
 
+/** 幅 maxW に収まるよう、書体の大きさを下げる */
+function fitFont(g: CanvasRenderingContext2D, text: string, maxW: number, size: number, font: (px: number) => string) {
+  let px = size
+  g.font = font(px)
+  while (g.measureText(text).width > maxW && px > 8) {
+    px -= 4
+    g.font = font(px)
+  }
+}
+
 function canvasTex(w: number, h: number, draw: (g: CanvasRenderingContext2D) => void) {
   const c = document.createElement("canvas")
   c.width = w
@@ -67,13 +77,14 @@ function billboardTexture(b: (typeof BILLBOARDS)[number], i: number) {
     // 本文
     g.textAlign = "left"
     g.fillStyle = b.color
-    g.font = `128px ${display}`
+    const maxW = W - 220 - 60
+    fitFont(g, b.title, maxW, 128, (px) => `${px}px ${display}`)
     g.fillText(b.title, 220, H / 2 - 62)
     g.fillStyle = "#1b1916"
-    g.font = `700 60px ${jpFont}`
+    fitFont(g, b.jp, maxW, 60, (px) => `700 ${px}px ${jpFont}`)
     g.fillText(b.jp, 224, H / 2 + 40)
     g.fillStyle = "rgba(27,25,22,0.7)"
-    g.font = `34px ${display}`
+    fitFont(g, b.sub, maxW, 34, (px) => `${px}px ${display}`)
     g.fillText(b.sub, 226, H / 2 + 112)
     weather(g, W, H, 11 + i * 7)
   })

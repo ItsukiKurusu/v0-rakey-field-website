@@ -166,7 +166,6 @@ export function createHeroScene(renderer: THREE.WebGLRenderer, profile: DevicePr
     sun.position.copy(impala.group.position).addScaledVector(skyState.sunDir, 80)
     sun.position.y = Math.max(sun.position.y, impala.group.position.y + 6) // 影が長く伸びすぎないように
     sun.target.position.copy(impala.group.position)
-    if (profile.shadowMapSize > 0) sun.castShadow = sunUp > 0.05
     moon.intensity = 0.85 * tod
     hemi.intensity = THREE.MathUtils.lerp(0.95, 0.36, tod)
     hemi.color.copy(skyState.zenith).lerp(skyState.horizon, 0.5)
@@ -179,6 +178,21 @@ export function createHeroScene(renderer: THREE.WebGLRenderer, profile: DevicePr
     headlight.intensity = 260 * lights
     signs.setNight(tod, lights)
     garage.setNeon(smooth(p, NEON_ON, NEON_ON + 0.03), time)
+  }
+
+  /**
+   * 最初に全部のシェーダーとテクスチャを GPU に載せておく。
+   * 画面に初めて入った物（ガレージ・看板など）がその場でコンパイルされると、一瞬止まる
+   */
+  const warmup = () => {
+    renderer.compile(scene, camera)
+    scene.traverse((o) => {
+      const mesh = o as THREE.Mesh
+      if (!mesh.isMesh) return
+      for (const m of Array.isArray(mesh.material) ? mesh.material : [mesh.material]) {
+        for (const v of Object.values(m)) if ((v as THREE.Texture)?.isTexture) renderer.initTexture(v as THREE.Texture)
+      }
+    })
   }
 
   const render = () => {
@@ -202,6 +216,7 @@ export function createHeroScene(renderer: THREE.WebGLRenderer, profile: DevicePr
     impala,
     road,
     update,
+    warmup,
     render,
     resize,
     dispose() {

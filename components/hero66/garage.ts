@@ -10,6 +10,17 @@ function fontFamily(cssVar: string, fallback: string) {
   return v ? `${v}, ${fallback}` : fallback
 }
 
+/** 幅 maxW に収まるよう、書体の大きさを下げてから描く */
+function fitText(g: CanvasRenderingContext2D, text: string, maxW: number, size: number, font: (px: number) => string) {
+  let px = size
+  g.font = font(px)
+  while (g.measureText(text).width > maxW && px > 8) {
+    px -= 4
+    g.font = font(px)
+  }
+  return px
+}
+
 function canvasTex(w: number, h: number, draw: (g: CanvasRenderingContext2D) => void, repeat?: [number, number]) {
   const c = document.createElement("canvas")
   c.width = w
@@ -33,13 +44,13 @@ function neonTexture(on: boolean) {
     g.fillRect(0, 0, 1024, 512)
     g.textAlign = "center"
     g.textBaseline = "middle"
-    const tube = (text: string, x: number, y: number, size: number, color: string) => {
-      g.font = `${size}px ${display}`
+    const tube = (text: string, x: number, y: number, size0: number, color: string) => {
+      const size = fitText(g, text, 900, size0, (px) => `${px}px ${display}`)
       g.lineWidth = size * 0.06
       g.lineJoin = "round"
       if (on) {
         g.shadowColor = color
-        g.shadowBlur = 28
+        g.shadowBlur = 16
         g.strokeStyle = color
         g.strokeText(text, x, y)
         g.shadowBlur = 0
@@ -79,7 +90,7 @@ function shopSignTexture() {
     g.fillStyle = "#f4f6f8"
     g.textAlign = "center"
     g.textBaseline = "middle"
-    g.font = "bold 150px Georgia, 'Times New Roman', serif"
+    fitText(g, "RAKEY FIELD", 860, 150, (px) => `bold ${px}px Georgia, 'Times New Roman', serif`)
     g.fillText("RAKEY FIELD", 512, 210)
   })
 }
@@ -269,7 +280,7 @@ export function createGarage(road: Road) {
   const setNeon = (k: number, time: number) => {
     const flicker = k > 0 && k < 1 ? (Math.sin(time * 53) > 0.2 ? 1 : 0.25) : 1
     const v = k * flicker
-    neonMat.emissiveIntensity = 3.2 * v
+    neonMat.emissiveIntensity = 1.5 * v // 強すぎると文字がにじんで読めない
     neonLight.intensity = 26 * v
     wallLampMat.emissiveIntensity = 1.1 * k
     wallLight.intensity = 5 * k
