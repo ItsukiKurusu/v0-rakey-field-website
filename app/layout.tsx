@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from 'next'
 import { Noto_Sans_JP, Bebas_Neue } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
+import SmoothScrollProvider from '@/components/SmoothScrollProvider'
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://rakey-field.com'
 
@@ -88,7 +89,6 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 1,
   themeColor: '#1E40AF',
 }
 
@@ -166,7 +166,7 @@ export default function RootLayout({
   return (
     <html lang="ja" className="bg-background">
       <body className={`${notoSansJP.variable} ${bebasNeue.variable} font-sans antialiased`}>
-        {children}
+        <SmoothScrollProvider>{children}</SmoothScrollProvider>
         <Analytics />
         <script
           type="application/ld+json"
