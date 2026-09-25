@@ -123,7 +123,7 @@ export default function AntiquePage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
               {[
                 { src: "/images/comics.jpg", label: "アメリカンコミック" },
-                { src: "/images/Hot Wheels.jpg", label: "ホットウィール" },
+                { src: "/images/hot-wheels.jpg", label: "ホットウィール" },
               ].map((item, i) => (
                 <FadeInUp key={i} delay={i * 0.1}>
                   <motion.div
