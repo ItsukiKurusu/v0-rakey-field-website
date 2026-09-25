@@ -29,6 +29,19 @@ let after = 0
 for (const file of walk(root).filter((f) => /\.(jpe?g|png)$/i.test(f))) {
   const rel = path.relative(root, file)
   const input = fs.readFileSync(file)
+  const backup = path.join(backupRoot, rel)
+  // アイコンなどの小さな画像は触らない（縮めても数バイト、減色で画質が落ちる）
+  if (input.length < 150_000) {
+    before += input.length
+    after += input.length
+    continue
+  }
+  // 退避済み＝変換済み。再圧縮すると画質が落ちるので触らない
+  if (fs.existsSync(backup)) {
+    before += input.length
+    after += input.length
+    continue
+  }
   const meta = await sharp(input).metadata()
   const maxEdge = EDGE_OVERRIDES[rel] ?? MAX_EDGE
 
@@ -52,11 +65,8 @@ for (const file of walk(root).filter((f) => /\.(jpe?g|png)$/i.test(f))) {
     continue
   }
 
-  const backup = path.join(backupRoot, rel)
-  if (!fs.existsSync(backup)) {
-    fs.mkdirSync(path.dirname(backup), { recursive: true })
-    fs.copyFileSync(file, backup)
-  }
+  fs.mkdirSync(path.dirname(backup), { recursive: true })
+  fs.copyFileSync(file, backup)
   fs.writeFileSync(file, output)
   after += output.length
   console.log(`${(input.length / 1e6).toFixed(2)}MB → ${(output.length / 1e6).toFixed(2)}MB  ${rel}`)
