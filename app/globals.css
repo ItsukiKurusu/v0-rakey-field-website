@@ -79,6 +79,17 @@
   --font-sans: var(--font-noto-sans-jp), 'Hiragino Sans', 'Yu Gothic', sans-serif;
   --font-mono: ui-monospace, 'SFMono-Regular', monospace;
   --font-display: var(--font-bebas-neue), 'Impact', sans-serif;
+  --font-slab: var(--font-alfa-slab), 'Rockwell', 'Georgia', serif;
+  /* ルート66のロードサイド（古い紙・アスファルト・錆びた赤・マスタード・看板の青緑・ガレージの青） */
+  --color-paper: #f2e8d5;
+  --color-paper-deep: #e8d9bd;
+  --color-asphalt: #1b1916;
+  --color-asphalt-soft: #28241f;
+  --color-ink: #2a241e;
+  --color-rust: #b5402a;
+  --color-mustard: #d9a441;
+  --color-teal: #2e7d78;
+  --color-garage: #3f4fb7;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -221,4 +232,113 @@
 }
 .motion-stopped .hero-lines {
   display: none;
+}
+
+/* ───────── トップの各セクション（ロードサイド・アメリカーナ） ───────── */
+
+/* 古い紙の地（ごく薄いざらつき） */
+.paper {
+  background-color: var(--color-paper);
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .25 0 0 0 0 .15 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)'/%3E%3C/svg%3E"),
+    radial-gradient(120% 80% at 50% 0%, rgba(255, 250, 240, 0.6), rgba(255, 250, 240, 0) 60%);
+}
+.asphalt {
+  background-color: var(--color-asphalt);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)'/%3E%3C/svg%3E");
+  color: var(--color-paper);
+}
+
+/* 道の黄色いセンターライン（破線） */
+.road-line {
+  background-image: repeating-linear-gradient(90deg, var(--color-mustard) 0 44px, transparent 44px 80px);
+  height: 6px;
+}
+.road-line-v {
+  background-image: repeating-linear-gradient(180deg, var(--color-mustard) 0 28px, transparent 28px 52px);
+  width: 4px;
+}
+
+/* 見出しの上の「マイル標」 */
+.mile {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-display);
+  letter-spacing: 0.3em;
+  font-size: 0.9rem;
+}
+.mile::before {
+  content: attr(data-no);
+  display: inline-grid;
+  place-items: center;
+  min-width: 2.2rem;
+  height: 2.2rem;
+  padding: 0 0.3rem;
+  border: 2px solid currentColor;
+  border-radius: 0.35rem 0.35rem 1.1rem 1.1rem; /* 盾の形 */
+  letter-spacing: 0.05em;
+  font-size: 1rem;
+}
+
+/* ブリキの看板（縁取り・リベット・少し角の丸い板） */
+.tin-sign {
+  position: relative;
+  border-radius: 14px;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.35) inset, 0 18px 40px -18px rgba(40, 25, 10, 0.55);
+}
+.tin-sign::before {
+  /* 内側の細い縁 */
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border: 2px solid rgba(255, 255, 255, 0.55);
+  border-radius: 9px;
+  pointer-events: none;
+}
+.rivet {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 35% 30%, #fff 0, #c9c2b6 35%, #6d665c 100%);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.35);
+}
+
+/* ポラロイド風の写真と、テープ */
+.polaroid {
+  background: #fbf7ee;
+  padding: 10px 10px 34px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15), 0 20px 36px -20px rgba(40, 25, 10, 0.6);
+}
+.tape {
+  position: absolute;
+  width: 88px;
+  height: 26px;
+  background: rgba(233, 214, 160, 0.72);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+  mask-image: linear-gradient(90deg, transparent 0 3px, #000 3px calc(100% - 3px), transparent calc(100% - 3px));
+}
+
+/* スクロールで現れる（JS は data-shown を付けるだけ。動きを止めた人には最初から出す） */
+.reveal {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 0.9s cubic-bezier(0.2, 0.7, 0.2, 1), transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition-delay: var(--reveal-delay, 0s);
+}
+.reveal[data-shown] {
+  opacity: 1;
+  transform: none;
+}
+.motion-stopped .reveal,
+.no-js .reveal {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    transition: none;
+  }
 }

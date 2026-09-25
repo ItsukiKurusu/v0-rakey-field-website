@@ -1,6 +1,6 @@
 import React from "react"
 import type { Metadata, Viewport } from 'next'
-import { Noto_Sans_JP, Bebas_Neue } from 'next/font/google'
+import { Noto_Sans_JP, Bebas_Neue, Alfa_Slab_One } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 import SmoothScrollProvider from '@/components/SmoothScrollProvider'
@@ -9,8 +9,15 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://rakey-field.com'
 
 const notoSansJP = Noto_Sans_JP({
   subsets: ['latin'],
-  weight: ['400', '500', '700'],
+  weight: ['400', '500', '700', '900'],
   variable: '--font-noto-sans-jp',
+})
+
+// 看板の英字（スラブセリフ）。英字だけなので軽い
+const alfaSlab = Alfa_Slab_One({
+  subsets: ['latin'],
+  weight: ['400'],
+  variable: '--font-alfa-slab',
 })
 
 const bebasNeue = Bebas_Neue({
@@ -89,7 +96,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  themeColor: '#1E40AF',
+  themeColor: '#1b1916',
 }
 
 const jsonLd = {
@@ -165,7 +172,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja" className="bg-background">
-      <body className={`${notoSansJP.variable} ${bebasNeue.variable} font-sans antialiased`}>
+      <body className={`${notoSansJP.variable} ${bebasNeue.variable} ${alfaSlab.variable} font-sans antialiased`}>
         <SmoothScrollProvider>{children}</SmoothScrollProvider>
         <Analytics />
         <script

@@ -2,8 +2,8 @@
 
 import { motion } from "framer-motion"
 import { Package, Phone, ShoppingBag, Globe, Star, Truck } from "lucide-react"
-import { Header } from "@/components/sections/Header"
-import { Footer } from "@/components/sections/Footer"
+import { Header } from "@/components/site/Header"
+import { Footer } from "@/components/site/Footer"
 import { FadeInUp } from "@/components/shared/FadeInUp"
 import { ContactModal } from "@/components/shared/ContactModal"
 import { Button } from "@/components/ui/button"
