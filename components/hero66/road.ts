@@ -93,72 +93,116 @@ export function createRoad() {
 
 export type Road = ReturnType<typeof createRoad>
 
+/** 道の帯の片側の幅（m）。アスファルト 4.2m の外に路肩の土、その外で地面へ溶け込む */
+const HALF = 8.8
+
 /**
- * 路面の上に重ねる線（横 = 道幅、縦 = 9m ぶん）。地は透明で、路肩の砂利・白い外側線・黄色の破線だけを描く。
- * アスファルトの質感は下の面（Poly Haven の asphalt_02）が受け持つ。
+ * 路面の材質：アスファルト（ふちは波打つ）＋路肩の締まった土＋白線・黄色の破線（計算で描く）＋タイヤの通り道。
+ * 帯の外側は、世界座標に貼りついたノイズで少しずつ抜いて地面へなじませる（画面の点滅が起きない）。
  */
-function markingsTexture() {
-  const c = document.createElement("canvas")
-  c.width = 512
-  c.height = 512
-  const g = c.getContext("2d")!
-  g.clearRect(0, 0, 512, 512)
-  // 路肩の砂利（両端 12%）。内側の縁は少しぼかしてアスファルトへなじませる
-  for (const [x0, dir] of [[0, 1], [512 - 61, -1]] as const) {
-    const grad = g.createLinearGradient(dir > 0 ? x0 + 61 : x0, 0, dir > 0 ? x0 + 50 : x0 + 11, 0)
-    grad.addColorStop(0, "rgba(120,96,72,0)")
-    grad.addColorStop(1, "rgba(120,96,72,1)")
-    g.fillStyle = "rgb(120,96,72)"
-    g.fillRect(x0, 0, 61, 512)
-    g.fillStyle = grad
-    g.fillRect(dir > 0 ? x0 + 50 : x0, 0, 11, 512)
-    for (let k = 0; k < 1100; k++) {
-      g.fillStyle = `rgba(${150 + Math.random() * 60},${120 + Math.random() * 50},${90 + Math.random() * 40},0.7)`
-      g.fillRect(x0 + Math.random() * 58 + (dir > 0 ? 0 : 3), Math.random() * 512, 2, 2)
-    }
+function roadMaterial(asphalt: SurfaceMaps, shoulder: SurfaceMaps, noise: THREE.Texture) {
+  noise.wrapS = noise.wrapT = THREE.RepeatWrapping
+  // 凹凸はアスファルトの法線（模様1枚 = 2.5m 四方。帯の uv に合わせて繰り返す）
+  asphalt.normalMap.repeat.set((HALF * 2) / 2.5, 9 / 2.5)
+  const mat = new THREE.MeshStandardMaterial({
+    map: asphalt.map,
+    normalMap: asphalt.normalMap,
+    roughness: 1,
+    metalness: 0,
+    transparent: true, // 外側のふちを地面へ溶かすため（道より上の物は不透明なので重なりの問題は出ない）
+  })
+  const uniforms = {
+    uWidth: { value: HALF * 2 },
+    uNoise: { value: noise },
+    uShoulder: { value: shoulder.map },
+    uAsphaltTint: { value: new THREE.Color(0.5, 0.49, 0.48) }, // 日に焼けた古いアスファルト
   }
-  // 白い外側線（かすれ）
-  g.fillStyle = "rgba(235,232,220,0.8)"
-  g.fillRect(64, 0, 7, 512)
-  g.fillRect(512 - 71, 0, 7, 512)
-  // 黄色のセンターライン（破線：3m 引いて 6m 空ける）
-  g.fillStyle = "rgba(236,176,38,0.92)"
-  g.fillRect(252, 0, 8, 512 / 3)
-  // 線のかすれ
-  g.globalCompositeOperation = "destination-out"
-  for (let k = 0; k < 500; k++) {
-    g.fillStyle = `rgba(0,0,0,${Math.random() * 0.5})`
-    g.fillRect(Math.random() * 512, Math.random() * 512, 3 + Math.random() * 6, 2)
+  mat.onBeforeCompile = (shader) => {
+    Object.assign(shader.uniforms, uniforms)
+    shader.vertexShader = shader.vertexShader
+      .replace("#include <common>", "#include <common>\nvarying vec2 vRoadUv;")
+      .replace("#include <begin_vertex>", "#include <begin_vertex>\nvRoadUv = uv;")
+    shader.fragmentShader = shader.fragmentShader
+      .replace(
+        "#include <common>",
+        `#include <common>
+varying vec2 vRoadUv;
+uniform float uWidth;
+uniform sampler2D uNoise;
+uniform sampler2D uShoulder;
+uniform vec3 uAsphaltTint;
+float rAsph;
+float rTracks;`,
+      )
+      .replace(
+        "#include <color_fragment>",
+        /* glsl */ `#include <color_fragment>
+{
+  float c = (vRoadUv.x - 0.5) * uWidth; // 中心からの横位置（m、右が +）
+  float s = vRoadUv.y * 9.0;            // 道に沿った距離（m）
+  float ac = abs(c);
+  vec3 nz = texture2D(uNoise, vec2(c * 0.07, s * 0.013)).rgb;
+  // アスファルトのふち（波打つ）
+  float edge = 4.2 + (nz.r - 0.5) * 0.8;
+  rAsph = 1.0 - smoothstep(edge - 0.06, edge + 0.06, ac);
+  vec3 asph = texture2D(map, vec2(c / 2.5, s / 2.5)).rgb * uAsphaltTint;
+  asph *= mix(0.84, 1.06, nz.g); // 補修跡のむら
+  // タイヤの通り道（各車線に2本）：黒ずんで少し滑らか
+  rTracks = exp(-pow((ac - 1.2) / 0.32, 2.0)) + exp(-pow((ac - 2.9) / 0.32, 2.0));
+  asph *= 1.0 - 0.2 * rTracks;
+  // 線（かすれ付き）：白い外側線と、黄色の破線（3m 引いて 9m 空ける）
+  float wear = smoothstep(0.3, 0.72, texture2D(uNoise, vec2(c * 1.9, s * 0.37)).b);
+  float fw = fwidth(c) * 1.2;
+  float white = (1.0 - smoothstep(0.065, 0.065 + fw, abs(ac - 3.95))) * wear;
+  float dash = step(fract(s / 12.0), 0.25);
+  float yellow = (1.0 - smoothstep(0.055, 0.055 + fw, ac)) * dash * wear;
+  asph = mix(asph, vec3(0.74, 0.73, 0.69), white * 0.85);
+  asph = mix(asph, vec3(0.82, 0.55, 0.12), yellow * 0.9);
+  // 路肩の土
+  vec3 dirt = texture2D(uShoulder, vec2(c / 2.2, s / 2.2)).rgb * vec3(0.86, 0.8, 0.74); // 灰色がかった締まった土
+  dirt *= mix(0.8, 1.05, nz.b);
+  diffuseColor.rgb = mix(dirt, asph, rAsph);
+  // 外側は透明度でなめらかに地面へ（ふちは世界座標のノイズで波打たせる）
+  float fade = 1.0 - smoothstep(5.4, 8.4, ac + (nz.g - 0.5) * 2.4);
+  diffuseColor.a *= fade;
+}`,
+      )
+      .replace(
+        "#include <roughnessmap_fragment>",
+        "#include <roughnessmap_fragment>\nroughnessFactor = mix(1.0, mix(0.9, 0.7, clamp(rTracks, 0.0, 1.0)), rAsph);",
+      )
+      .replace(
+        "#include <normal_fragment_maps>",
+        "#include <normal_fragment_maps>\nnormal = normalize(mix(nonPerturbedNormal, normal, 0.25 + 0.75 * rAsph));",
+      )
   }
-  g.globalCompositeOperation = "source-over"
-  const t = new THREE.CanvasTexture(c)
-  t.colorSpace = THREE.SRGBColorSpace
-  t.wrapS = THREE.ClampToEdgeWrapping
-  t.wrapT = THREE.RepeatWrapping
-  t.anisotropy = 8
-  return t
+  mat.customProgramCacheKey = () => "hero66-road-v3"
+  return mat
 }
 
-/** 道の面（全長を 1.5m 刻みの帯に）。下：アスファルト、上：線と路肩 */
-export function createRoadMesh(road: Road, asphalt: SurfaceMaps) {
-  const halfW = ROAD.width / 2 + 1.3 // 路肩の砂利まで
+/** 道の帯（全長を 1.5m 刻みに）。路肩の土と、地面へ溶け込む外側まで含む */
+export function createRoadMesh(road: Road, asphalt: SurfaceMaps, shoulder: SurfaceMaps, noise: THREE.Texture) {
   const step = 1.5
   const n = Math.ceil(road.length / step)
   const pos: number[] = []
   const uv: number[] = []
   const idx: number[] = []
   const f = { pos: new THREE.Vector3(), forward: new THREE.Vector3(), right: new THREE.Vector3() }
+  const across = 6 // 横の分割（外側ほど地面の起伏に沿わせる）
   for (let k = 0; k <= n; k++) {
     const s = Math.min(road.length, k * step)
     road.frameAt(s, f)
-    for (const side of [-1, 1]) {
-      pos.push(f.pos.x + f.right.x * halfW * side, ROAD.y, f.pos.z + f.right.z * halfW * side)
-      uv.push(side < 0 ? 0 : 1, s / 9)
+    for (let j = 0; j <= across; j++) {
+      const t = j / across
+      const c = (t - 0.5) * 2 * HALF
+      // 路肩の外は地面（道の近くは平ら）より少しだけ上に
+      pos.push(f.pos.x + f.right.x * c, ROAD.y - Math.max(0, Math.abs(c) - 5) * 0.004, f.pos.z + f.right.z * c)
+      uv.push(t, s / 9)
     }
     if (k < n) {
-      const a = k * 2
-      // 左(-右ベクトル) → 右 の順に並ぶので、上向きの面は (a, a+1, a+2)
-      idx.push(a, a + 1, a + 2, a + 1, a + 3, a + 2)
+      const a = k * (across + 1)
+      const b = a + across + 1
+      for (let j = 0; j < across; j++) idx.push(a + j, a + j + 1, b + j, a + j + 1, b + j + 1, b + j)
     }
   }
   const g = new THREE.BufferGeometry()
@@ -166,46 +210,15 @@ export function createRoadMesh(road: Road, asphalt: SurfaceMaps) {
   g.setAttribute("uv", new THREE.Float32BufferAttribute(uv, 2))
   g.setIndex(idx)
   g.computeVertexNormals()
-
-  // アスファルトの模様1枚 = 2.5m 四方（横 11m・縦 9m の uv に合わせて繰り返す）
-  for (const t of [asphalt.map, asphalt.normalMap, asphalt.armMap]) t.repeat.set((halfW * 2) / 2.5, 9 / 2.5)
-  const baseMat = new THREE.MeshStandardMaterial({
-    map: asphalt.map,
-    normalMap: asphalt.normalMap,
-    roughnessMap: asphalt.armMap,
-    color: new THREE.Color(0.5, 0.49, 0.48), // 日に焼けた古いアスファルト
-    roughness: 1,
-    metalness: 0,
-  })
-  const base = new THREE.Mesh(g, baseMat)
-  base.receiveShadow = true
-  base.name = "road"
-
-  const lines = markingsTexture()
-  const lineMat = new THREE.MeshStandardMaterial({
-    map: lines,
-    transparent: true,
-    roughness: 0.85,
-    metalness: 0,
-    depthWrite: false,
-    polygonOffset: true,
-    polygonOffsetFactor: -2,
-    polygonOffsetUnits: -2,
-  })
-  const overlay = new THREE.Mesh(g, lineMat)
-  overlay.receiveShadow = true
-  overlay.renderOrder = 1
-  overlay.name = "roadMarkings"
-
-  const mesh = new THREE.Group()
-  mesh.add(base, overlay)
+  const mat = roadMaterial(asphalt, shoulder, noise)
+  const mesh = new THREE.Mesh(g, mat)
+  mesh.receiveShadow = true
+  mesh.name = "road"
   return {
     mesh,
     dispose() {
       g.dispose()
-      lines.dispose()
-      baseMat.dispose()
-      lineMat.dispose()
+      mat.dispose()
     },
   }
 }

@@ -245,6 +245,65 @@ async function bakeSurface(name, { size, normalSize, strength }) {
   return { diff: `tex/${name}_diff.webp`, arm: `tex/${name}_arm.webp`, nor: `tex/${name}_nor.webp` }
 }
 
+// ── 地面のむら用のノイズ（R/G/B に周波数の違う繰り返しノイズ。端がつながる） ──
+async function bakeNoise() {
+  const N = 256
+  const px = Buffer.alloc(N * N * 3)
+  const layer = (seed, cells) => {
+    let a = seed
+    const r = () => ((a = (a * 16807) % 2147483647) / 2147483647)
+    const g = Array.from({ length: cells * cells }, r)
+    const at = (x, y) => g[((y + cells) % cells) * cells + ((x + cells) % cells)]
+    return (u, v) => {
+      const x = u * cells
+      const y = v * cells
+      const ix = Math.floor(x)
+      const iy = Math.floor(y)
+      const fx = x - ix
+      const fy = y - iy
+      const sx = fx * fx * (3 - 2 * fx)
+      const sy = fy * fy * (3 - 2 * fy)
+      const a0 = at(ix, iy) + (at(ix + 1, iy) - at(ix, iy)) * sx
+      const a1 = at(ix, iy + 1) + (at(ix + 1, iy + 1) - at(ix, iy + 1)) * sx
+      return a0 + (a1 - a0) * sy
+    }
+  }
+  const fbm = (fs) => (u, v) => fs.reduce((s, [f, w]) => s + f(u, v) * w, 0)
+  const R = fbm([[layer(3, 4), 0.55], [layer(5, 8), 0.3], [layer(7, 16), 0.15]])
+  const G = fbm([[layer(11, 6), 0.5], [layer(13, 12), 0.3], [layer(17, 24), 0.2]])
+  const B = fbm([[layer(19, 16), 0.5], [layer(23, 32), 0.3], [layer(29, 64), 0.2]])
+  for (let y = 0; y < N; y++) {
+    for (let x = 0; x < N; x++) {
+      const i = (y * N + x) * 3
+      px[i] = Math.round(R(x / N, y / N) * 255)
+      px[i + 1] = Math.round(G(x / N, y / N) * 255)
+      px[i + 2] = Math.round(B(x / N, y / N) * 255)
+    }
+  }
+  await sharp(px, { raw: { width: N, height: N, channels: 3 } }).png().toFile(path.join(OUT, "tex", "noise.png"))
+  return "tex/noise.png"
+}
+
+// ── 草と低木のモデル ───────────────────────────────────────
+const gt = (args) => execFileSync("node_modules/.bin/gltf-transform", args, { stdio: "inherit" })
+async function bakeFoliage() {
+  // 草：色の画像に透明がない（背景が黒）ので、明るさから透明度を作って別の画像にする
+  const grassSrc = path.join(SRC, "grass_medium_02_1k.gltf", "grass_medium_02_1k.gltf")
+  gt(["simplify", grassSrc, path.join(OUT, "grass.glb"), "--ratio", "0.3", "--error", "0.01"])
+  gt(["resize", path.join(OUT, "grass.glb"), path.join(OUT, "grass.glb"), "--width", "512", "--height", "512"])
+  gt(["webp", path.join(OUT, "grass.glb"), path.join(OUT, "grass.glb"), "--quality", "80"])
+  gt(["meshopt", path.join(OUT, "grass.glb"), path.join(OUT, "grass.glb")])
+  const diff = path.join(SRC, "grass_medium_02_1k.gltf", "textures", "grass_medium_02_diff_1k.jpg")
+  await sharp(diff).resize(512, 512).greyscale().linear(6, -40).webp({ quality: 85 }).toFile(path.join(OUT, "tex", "grass_alpha.webp"))
+  // 低木：三角形を減らす。葉は1枚ずつの小さな板なので、板の縁を固定しないと葉ごと消える（--lock-border）
+  const shrubSrc = path.join(SRC, "shrub_02_1k.gltf", "shrub_02_1k.gltf")
+  gt(["simplify", shrubSrc, path.join(OUT, "shrub.glb"), "--ratio", "0.15", "--error", "0.02", "--lock-border", "true"])
+  gt(["resize", path.join(OUT, "shrub.glb"), path.join(OUT, "shrub.glb"), "--width", "512", "--height", "512"])
+  gt(["webp", path.join(OUT, "shrub.glb"), path.join(OUT, "shrub.glb"), "--quality", "80"])
+  gt(["meshopt", path.join(OUT, "shrub.glb"), path.join(OUT, "shrub.glb")])
+  return { grass: "grass.glb", grassAlpha: "tex/grass_alpha.webp", shrub: "shrub.glb" }
+}
+
 // ── 岩のモデル ─────────────────────────────────────────────
 function bakeRock() {
   const src = path.join(SRC, "namaqualand_boulder_02_1k.gltf", "namaqualand_boulder_02_1k.gltf")
@@ -266,6 +325,12 @@ const meta = {
   },
   ground: await bakeSurface("red_sand", { size: 1024, normalSize: 512, strength: 10 }),
   road: await bakeSurface("asphalt_02", { size: 1024, normalSize: 512, strength: 6 }),
+  // 地面の2層目（小石まじりの乾いた土）・路肩の土・ガレージ前のひび割れたコンクリート
+  groundRocks: await bakeSurface("dry_ground_rocks", { size: 1024, normalSize: 512, strength: 10 }),
+  shoulder: await bakeSurface("gravel_road", { size: 1024, normalSize: 512, strength: 8 }),
+  concrete: await bakeSurface("cracked_concrete", { size: 1024, normalSize: 512, strength: 6 }),
+  noise: await bakeNoise(),
+  foliage: await bakeFoliage(),
   rock: bakeRock(),
 }
 // 帯の JPEG は非同期で書き出しているので少し待つ

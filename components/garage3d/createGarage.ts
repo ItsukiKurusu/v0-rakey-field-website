@@ -16,7 +16,12 @@ type TexMeta = Record<string, { file: string; aspect: number; alpha: boolean }>
 
 export type GarageModel = Awaited<ReturnType<typeof createGarageModel>>
 
-export async function createGarageModel({ base = "/garage3d/" } = {}) {
+type Surface = { map: THREE.Texture; normalMap: THREE.Texture; armMap: THREE.Texture }
+
+/**
+ * @param concrete 入口前の土間に使う実写のコンクリート（無ければ canvas の土間）
+ */
+export async function createGarageModel({ base = "/garage3d/", concrete }: { base?: string; concrete?: Surface } = {}) {
   const meta: TexMeta = await fetch(base + "meta.json").then((r) => r.json())
   const loader = new THREE.TextureLoader()
   const photos: Record<string, THREE.Texture> = {}
@@ -516,7 +521,25 @@ export async function createGarageModel({ base = "/garage3d/" } = {}) {
 
   // ── Ground：入口前の土間コンクリート（濡れた暗いしみ） ─────
   const apronD = 2.2
-  const apron = plane(W + 1.2, apronD, concMat, "Apron")
+  let apronMat: THREE.Material = concMat
+  if (concrete) {
+    // 実写のひび割れたコンクリート（模様1枚 = 1.6m 四方）
+    for (const tx of [concrete.map, concrete.normalMap, concrete.armMap]) {
+      tx.wrapS = tx.wrapT = THREE.RepeatWrapping
+      tx.repeat.set((W + 1.2) / 1.6, apronD / 1.6)
+    }
+    apronMat = keep(
+      new THREE.MeshStandardMaterial({
+        map: concrete.map,
+        normalMap: concrete.normalMap,
+        roughnessMap: concrete.armMap,
+        aoMap: concrete.armMap,
+        color: new THREE.Color(0.85, 0.83, 0.8),
+        roughness: 1,
+      }),
+    )
+  }
+  const apron = plane(W + 1.2, apronD, apronMat, "Apron")
   apron.rotation.x = -Math.PI / 2
   apron.position.set(0, 0.005, front + apronD / 2)
   const ground = named("Ground", apron)

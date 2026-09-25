@@ -68,6 +68,22 @@ export default function HeroCanvas({ onReady }: Props) {
           hero,
           setProgress,
           // 大きさを指定して1枚描き、画像にする（タブが隠れていても撮れる）
+          // 好きな位置から1枚描く（地面や道の細部の確認用）。pos / look は世界座標
+          peek: (p: number, pos: number[], look: number[], fov: number, w: number, h: number) => {
+            gl.renderer.setPixelRatio(1)
+            gl.renderer.setSize(w, h, false)
+            hero.resize(w, h)
+            hero.update(p, performance.now() / 1000)
+            hero.camera.position.set(pos[0], pos[1], pos[2])
+            hero.camera.lookAt(look[0], look[1], look[2])
+            hero.camera.fov = fov
+            hero.camera.updateProjectionMatrix()
+            hero.render()
+            const url = gl.renderer.domElement.toDataURL("image/jpeg", 0.88)
+            const r = gl.applyResolution()
+            hero.resize(r.width, r.height)
+            return url
+          },
           capture: (p: number, w: number, h: number) => {
             gl.renderer.setPixelRatio(1)
             gl.renderer.setSize(w, h, false)

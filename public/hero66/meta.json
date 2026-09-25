@@ -37,5 +37,26 @@
     "arm": "tex/asphalt_02_arm.webp",
     "nor": "tex/asphalt_02_nor.webp"
   },
+  "groundRocks": {
+    "diff": "tex/dry_ground_rocks_diff.webp",
+    "arm": "tex/dry_ground_rocks_arm.webp",
+    "nor": "tex/dry_ground_rocks_nor.webp"
+  },
+  "shoulder": {
+    "diff": "tex/gravel_road_diff.webp",
+    "arm": "tex/gravel_road_arm.webp",
+    "nor": "tex/gravel_road_nor.webp"
+  },
+  "concrete": {
+    "diff": "tex/cracked_concrete_diff.webp",
+    "arm": "tex/cracked_concrete_arm.webp",
+    "nor": "tex/cracked_concrete_nor.webp"
+  },
+  "noise": "tex/noise.png",
+  "foliage": {
+    "grass": "grass.glb",
+    "grassAlpha": "tex/grass_alpha.webp",
+    "shrub": "shrub.glb"
+  },
   "rock": "boulder.glb"
 }
