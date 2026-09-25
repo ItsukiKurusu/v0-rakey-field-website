@@ -8,27 +8,47 @@ import { createImpala } from "@/components/impala3d/createImpala"
 import { SPEC } from "@/components/impala3d/spec"
 import type { DeviceProfile } from "@/lib/renderer"
 import { createCameraRig, type CameraPose } from "./cameraRig"
-import { BREATH, DUSK, FOG, LIGHTS_ON, NEON_ON, ROAD } from "./constants"
+import { BREATH, DUSK, FOG, LIGHTS_ON, NEON_ON, ROAD, SKY } from "./constants"
 import { createGarage } from "./garage"
 import { createRoad, createRoadMesh } from "./road"
 import { createRoadside } from "./roadside"
 import { createSigns } from "./signs"
-import { createSky, skyStateAt } from "./sky"
+import type { HeroAssets } from "./assets"
+import { createSky, skyWeights, sunAt, type SkyState } from "./sky"
 import { createTerrain } from "./terrain"
 
 const smooth = THREE.MathUtils.smoothstep
-const SUN_WARM = new THREE.Color("#ffb070")
+const SUN_WARM = new THREE.Color("#ffc58a")
 const SUN_LOW = new THREE.Color("#ff6a3a")
+const HEMI_DAY = new THREE.Color("#ffd8b0")
+const HEMI_NIGHT = new THREE.Color("#3a4a80")
+
+/** three の ACES Filmic と同じ式（霧の色を、トーンマップ後の空の地平線にそろえるため） */
+function acesFilmic(c: THREE.Color, exposure: number) {
+  const v = [c.r, c.g, c.b].map((x) => (x * exposure) / 0.6)
+  const i = [
+    0.59719 * v[0] + 0.35458 * v[1] + 0.04823 * v[2],
+    0.076 * v[0] + 0.90834 * v[1] + 0.01566 * v[2],
+    0.0284 * v[0] + 0.13383 * v[1] + 0.83777 * v[2],
+  ].map((x) => (x * (x + 0.0245786) - 0.000090537) / (x * (0.983729 * x + 0.432951) + 0.238081))
+  const o = [
+    1.60475 * i[0] - 0.53108 * i[1] - 0.07367 * i[2],
+    -0.10208 * i[0] + 1.10813 * i[1] - 0.00605 * i[2],
+    -0.00327 * i[0] - 0.07276 * i[1] + 1.07602 * i[2],
+  ].map((x) => Math.min(1, Math.max(0, x)))
+  return c.setRGB(o[0], o[1], o[2])
+}
+const srgbEncode = (x: number) => (x <= 0.0031308 ? x * 12.92 : 1.055 * Math.pow(x, 1 / 2.4) - 0.055)
 
 export type HeroScene = ReturnType<typeof createHeroScene>
 
-export function createHeroScene(renderer: THREE.WebGLRenderer, profile: DeviceProfile) {
+export function createHeroScene(renderer: THREE.WebGLRenderer, profile: DeviceProfile, assets: HeroAssets) {
   const scene = new THREE.Scene()
   const camera = new THREE.PerspectiveCamera(38, 16 / 9, 0.1, 2600)
 
   const road = createRoad()
-  const roadMesh = createRoadMesh(road)
-  const terrain = createTerrain(road)
+  const roadMesh = createRoadMesh(road, assets.road)
+  const terrain = createTerrain(road, assets.ground)
   const signs = createSigns(road)
   const garage = createGarage(road)
 
@@ -36,9 +56,9 @@ export function createHeroScene(renderer: THREE.WebGLRenderer, profile: DevicePr
   const keep: Array<{ x: number; z: number; r: number }> = []
   signs.group.children.forEach((o) => keep.push({ x: o.position.x, z: o.position.z, r: 7 }))
   keep.push({ x: garage.group.position.x, z: garage.group.position.z, r: 17 })
-  const roadside = createRoadside(road, keep)
+  const roadside = createRoadside(road, keep, assets.rock)
 
-  const sky = createSky()
+  const sky = createSky(assets.sky)
   const impala = createImpala()
   // 夕陽の映り込みでヘッドライトが点いて見えないよう、レンズの映り込みを弱める（このヒーローだけ）
   impala.materials.lensClear.envMapIntensity = 0.55
@@ -72,31 +92,15 @@ export function createHeroScene(renderer: THREE.WebGLRenderer, profile: DevicePr
   headlight.target.position.set(26, 0, 0)
   impala.group.add(headlight, headlight.target)
 
-  // --- 霧 ---
-  scene.fog = new THREE.Fog("#ffbb73", FOG.near, FOG.far)
+  // --- 霧（色は毎フレーム、空の地平線に合わせる） ---
+  scene.fog = new THREE.Fog("#c89a78", FOG.near, FOG.far)
   const fog = scene.fog as THREE.Fog
 
-  // --- 映り込み（環境マップ）：夕暮れと夜の2枚を先に焼いておく ---
+  // --- 映り込み：実写の空（小さな .hdr）を PMREM に。夜はたそがれの空を暗くして使う ---
   const pmrem = new THREE.PMREMGenerator(renderer)
-  const bakeEnv = (tod: number) => {
-    const envScene = new THREE.Scene()
-    const s = createSky(100)
-    s.apply(skyStateAt(tod), tod, 0)
-    const groundDisk = new THREE.Mesh(
-      new THREE.CircleGeometry(100, 32).rotateX(-Math.PI / 2),
-      new THREE.MeshBasicMaterial({ color: tod < 0.5 ? "#7a5236" : "#141019" }),
-    )
-    groundDisk.position.y = -1
-    envScene.add(s.mesh, groundDisk)
-    const rt = pmrem.fromScene(envScene, 0, 0.1, 400)
-    s.dispose()
-    groundDisk.geometry.dispose()
-    ;(groundDisk.material as THREE.Material).dispose()
-    return rt
-  }
-  const envDusk = bakeEnv(0.15)
-  const envNight = bakeEnv(0.95)
-  scene.environment = envDusk.texture
+  const envSunset = pmrem.fromEquirectangular(assets.sky.sunset.envTex)
+  const envDusk = pmrem.fromEquirectangular(assets.sky.dusk.envTex)
+  scene.environment = envSunset.texture
 
   // --- ブルーム（デスクトップだけ）。発光（ランプ・ネオン・太陽）だけがにじむよう、しきい値は 1 より上 ---
   let composer: EffectComposer | null = null
@@ -104,7 +108,7 @@ export function createHeroScene(renderer: THREE.WebGLRenderer, profile: DevicePr
   if (!profile.isMobile) {
     composer = new EffectComposer(renderer)
     composer.addPass(new RenderPass(scene, camera))
-    bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), 0.55, 0.45, 1.05)
+    bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), 0.45, 0.45, 1.15)
     composer.addPass(bloom)
     composer.addPass(new OutputPass())
   }
@@ -112,8 +116,12 @@ export function createHeroScene(renderer: THREE.WebGLRenderer, profile: DevicePr
   const rig = createCameraRig()
   const frame = { pos: new THREE.Vector3(), forward: new THREE.Vector3(), right: new THREE.Vector3() }
   const pose: CameraPose = { pos: new THREE.Vector3(), look: new THREE.Vector3(), fov: 38 }
-  const skyState = skyStateAt(0)
+  const skyState: SkyState = { sunDir: new THREE.Vector3(), sunElevation: 0 }
   const fogColor = new THREE.Color()
+  const tmp = new THREE.Color()
+  const horizonA = new THREE.Color().fromArray(assets.sky.sunset.horizon).multiply(new THREE.Color(SKY.sunsetTint))
+  const horizonB = new THREE.Color().fromArray(assets.sky.dusk.horizon)
+  const horizonNight = new THREE.Color(SKY.night.horizon)
 
   /**
    * 進行度 p の画を決める。
@@ -151,26 +159,36 @@ export function createHeroScene(renderer: THREE.WebGLRenderer, profile: DevicePr
 
     // 空と1日の移り変わり
     const tod = smooth(p, DUSK.from, DUSK.to)
-    skyStateAt(tod, skyState)
-    sky.apply(skyState, tod, time)
+    const w = skyWeights(tod)
+    sky.apply(tod, time)
     sky.mesh.position.copy(camera.position)
-    fogColor.copy(skyState.horizon).lerp(skyState.mid, 0.25)
-    fog.color.copy(fogColor)
+    sunAt(tod, assets.sky.sunset.sunElevation, skyState)
+
+    // 霧：空の地平線の明るさ（トーンマップ前）。ブルームあり（HDR の中間バッファ）ならそのまま、
+    // 無しなら画面へ出る色（トーンマップ＋sRGB）にしてから渡す（three は霧を最後に混ぜるため）
+    fogColor.copy(horizonNight).lerp(tmp.copy(horizonB).multiplyScalar(w.exposureB), w.b)
+    fogColor.lerp(tmp.copy(horizonA).multiplyScalar(w.exposureA), w.a)
+    if (composer) fog.color.copy(fogColor)
+    else {
+      acesFilmic(fogColor, renderer.toneMappingExposure)
+      fog.color.setRGB(srgbEncode(fogColor.r), srgbEncode(fogColor.g), srgbEncode(fogColor.b), THREE.LinearSRGBColorSpace)
+    }
     fog.near = FOG.near * (1 - 0.4 * tod)
     fog.far = FOG.far * (1 - 0.35 * tod)
 
-    // 太陽（沈むにつれて弱く赤く）。影の範囲は車に追従させる
-    const sunUp = smooth(Math.sin(skyState.sunElevation), -0.03, 0.09)
-    sun.intensity = 2.6 * sunUp
+    // 太陽（実写の太陽と同じ向き。沈むにつれて弱く赤く）。影の範囲は車に追従させる
+    const sunUp = smooth(Math.sin(skyState.sunElevation), -0.03, 0.12)
+    sun.intensity = 2.8 * sunUp
     sun.color.lerpColors(SUN_WARM, SUN_LOW, tod)
     sun.position.copy(impala.group.position).addScaledVector(skyState.sunDir, 80)
-    sun.position.y = Math.max(sun.position.y, impala.group.position.y + 6) // 影が長く伸びすぎないように
+    sun.position.y = Math.max(sun.position.y, impala.group.position.y + 8) // 影が長く伸びすぎないように
     sun.target.position.copy(impala.group.position)
-    moon.intensity = 0.85 * tod
-    hemi.intensity = THREE.MathUtils.lerp(0.95, 0.36, tod)
-    hemi.color.copy(skyState.zenith).lerp(skyState.horizon, 0.5)
-    scene.environment = tod < 0.55 ? envDusk.texture : envNight.texture
-    scene.environmentIntensity = THREE.MathUtils.lerp(0.9, 0.55, tod)
+    moon.intensity = 0.85 * w.night
+    hemi.intensity = THREE.MathUtils.lerp(0.55, 0.32, tod)
+    hemi.color.lerpColors(HEMI_DAY, HEMI_NIGHT, tod)
+    scene.environment = w.a > 0.5 ? envSunset.texture : envDusk.texture
+    // 映り込みの .hdr は実写の明るさのままなので、空と同じ倍率を掛ける
+    scene.environmentIntensity = (w.a > 0.5 ? w.exposureA : THREE.MathUtils.lerp(SKY.exposure.dusk, 0.012, w.night)) * 1.15
 
     // ライト・看板・ネオン
     const lights = smooth(p, LIGHTS_ON, LIGHTS_ON + 0.035)
@@ -222,8 +240,8 @@ export function createHeroScene(renderer: THREE.WebGLRenderer, profile: DevicePr
     dispose() {
       composer?.dispose()
       bloom?.dispose()
+      envSunset.dispose()
       envDusk.dispose()
-      envNight.dispose()
       pmrem.dispose()
       impala.dispose()
       roadMesh.dispose()

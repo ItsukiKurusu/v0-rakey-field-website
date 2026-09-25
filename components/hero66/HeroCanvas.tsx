@@ -8,6 +8,7 @@ import gsap from "gsap"
 import { useMotionState } from "@/components/motion-state"
 import { damp, dampAlpha } from "@/lib/damp"
 import { attachResize, createRenderer, readDeviceProfile } from "@/lib/renderer"
+import { loadHeroAssets } from "./assets"
 import { COAST, LAMBDA, STILL_POSE } from "./constants"
 import { createHeroScene } from "./scene"
 import { createChoreography } from "./scrollChoreography"
@@ -41,13 +42,22 @@ export default function HeroCanvas({ onReady }: Props) {
         onReadyRef.current?.()
         return
       }
-      // 看板の文字にサイトの書体を使うので、読み込みを待ってから作る
-      await document.fonts.ready
+      // 看板の文字にサイトの書体を使うので書体を待ち、実写の素材（空・砂・路面・岩）を読む
+      let assets
+      try {
+        ;[assets] = await Promise.all([loadHeroAssets(gl.renderer), document.fonts.ready])
+      } catch {
+        // 素材が取れない（通信の失敗など）：3D は出さず、夕景の絵のまま
+        gl.dispose()
+        onReadyRef.current?.()
+        return
+      }
       if (cancelled) {
+        assets.dispose()
         gl.dispose()
         return
       }
-      const hero = createHeroScene(gl.renderer, profile)
+      const hero = createHeroScene(gl.renderer, profile, assets)
       const size = gl.applyResolution()
       hero.resize(size.width, size.height)
       hero.warmup()
@@ -89,6 +99,7 @@ export default function HeroCanvas({ onReady }: Props) {
         cleanup = () => {
           detach()
           hero.dispose()
+          assets.dispose()
           gl.dispose()
         }
         return
@@ -171,6 +182,7 @@ export default function HeroCanvas({ onReady }: Props) {
         document.removeEventListener("visibilitychange", onVisibility)
         if (usePointer) window.removeEventListener("pointermove", onPointerMove)
         hero.dispose()
+        assets.dispose()
         gl.dispose()
         if (process.env.NODE_ENV === "development") delete (window as unknown as Record<string, unknown>).__hero66
       }

@@ -43,7 +43,11 @@ function poleGeometry() {
   return g
 }
 
-export function createRoadside(road: Road, keepouts: Keepout[]) {
+export function createRoadside(
+  road: Road,
+  keepouts: Keepout[],
+  rock: { geometry: THREE.BufferGeometry; material: THREE.Material },
+) {
   const group = new THREE.Group()
   group.name = "roadside"
   const r = rng(5)
@@ -137,9 +141,8 @@ export function createRoadside(road: Road, keepouts: Keepout[]) {
   const cacti = scatter(cactusGeo, cactusMat, 70, 10, 90, [0.7, 1.35])
   cacti.name = "cacti"
 
-  const rockMat = new THREE.MeshStandardMaterial({ color: "#8c5a3c", roughness: 1, flatShading: true })
-  const rockGeo = new THREE.IcosahedronGeometry(1, 0)
-  const rocks = scatter(rockGeo, rockMat, 170, 6.5, 110, [0.25, 1.6], 0.6)
+  // 岩は Poly Haven の実写モデル（元の大きさ 約 2.5m）。解放は assets 側
+  const rocks = scatter(rock.geometry, rock.material, 150, 7, 110, [0.12, 0.75], 0.8)
   rocks.name = "rocks"
 
   const shrubMat = new THREE.MeshStandardMaterial({ color: "#6d6a45", roughness: 1, flatShading: true })
@@ -156,8 +159,8 @@ export function createRoadside(road: Road, keepouts: Keepout[]) {
   return {
     group,
     dispose() {
-      for (const g of [poleGeo, wireGeo, cactusGeo, rockGeo, shrubGeo]) g.dispose()
-      for (const mt of [poleMat, wireMat, cactusMat, rockMat, shrubMat]) mt.dispose()
+      for (const g of [poleGeo, wireGeo, cactusGeo, shrubGeo]) g.dispose()
+      for (const mt of [poleMat, wireMat, cactusMat, shrubMat]) mt.dispose()
     },
   }
 }

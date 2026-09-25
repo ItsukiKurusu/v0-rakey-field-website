@@ -95,13 +95,18 @@ export const BILLBOARD_LAYOUT = { side: 11, height: 3.2, width: 7.2, aspect: 0.4
 /** ガレージ（停車位置の右手）。ahead は停車位置から前へ、side は道の中心から右へ */
 export const GARAGE = { ahead: 1.5, side: 14, width: 11, depth: 8, height: 4.2 } as const
 
-/** 空の色（高さ 0 = 地平線、1 = 天頂）。夕暮れ → たそがれ → 夜 */
+/**
+ * 空。夕暮れとたそがれは実写（HDRI・scripts/bake-hero-assets.mjs）、夜の上空だけ自前のグラデーション。
+ * exposure は実写の明るさに掛ける倍率（夜はたそがれの空を暗くして山の影だけ残す）
+ */
 export const SKY = {
-  sunset: { zenith: "#2c3d70", mid: "#d0735a", horizon: "#ffbb73" },
-  dusk: { zenith: "#1a1f4d", mid: "#8a4d74", horizon: "#e1846a" },
-  night: { zenith: "#04060e", mid: "#0c1230", horizon: "#232a52" },
-  /** 太陽の方位（道の進む向き＝+X から、右回り度）と高度（度） */
-  sun: { azimuth: -18, elevationStart: 5, elevationEnd: -8 },
+  night: { zenith: "#03050d", horizon: "#141a36" },
+  // 実写は物理的な明るさ（太陽の周りは数十）を持つので、車や地面の光に合わせて大きく下げる
+  exposure: { sunset: 0.32, dusk: 0.16, night: 0.012 },
+  /** 夕暮れの空を夕陽の色へ寄せる（実写は昼に近い色のため） */
+  sunsetTint: "#ffd3a8",
+  /** 太陽の方位（道の進む向き＝+X から、右回り度）。高度は実写の太陽から始めてここまで沈める */
+  sun: { azimuth: -18, elevationEnd: -8 },
 } as const
 
 /** 霧（地平線の色でつなぐ） */

@@ -1,6 +1,7 @@
-// 荒野の地面と、地平線のメサ（テーブル状の岩山）。
+// 荒野の地面。道の近くは平らに、離れるほど起伏。表面は Poly Haven の赤い砂（色・法線・粗さ）。
+// 地平線の山は実写の空（HDRI）に任せる。
 import * as THREE from "three"
-import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js"
+import type { SurfaceMaps } from "./assets"
 import type { Road } from "./road"
 
 /** 毎回同じ並びになる乱数（配置を固定するため） */
@@ -36,23 +37,27 @@ function valueNoise(seed: number) {
   }
 }
 
-export function createTerrain(road: Road) {
+/** 砂の模様1枚が覆う大きさ（m） */
+const TILE = 5
+
+export function createTerrain(road: Road, sand: SurfaceMaps) {
   const group = new THREE.Group()
   group.name = "terrain"
   const noise = valueNoise(7)
   const fbm = (x: number, z: number) =>
     noise(x * 0.008, z * 0.008) * 0.6 + noise(x * 0.03, z * 0.03) * 0.3 + noise(x * 0.12, z * 0.12) * 0.1
 
-  // 地面：道に沿って長い板。道の近くは平ら、離れるほど起伏
   const size = { x: 1900, z: 1500 }
   const geo = new THREE.PlaneGeometry(size.x, size.z, 220, 150)
   geo.rotateX(-Math.PI / 2)
   geo.translate(300, 0, 0)
   const pos = geo.attributes.position as THREE.BufferAttribute
+  // 色むら（砂の色に掛ける。赤み・白っぽさの広い斑）
   const colors = new Float32Array(pos.count * 3)
-  const sandA = new THREE.Color("#c4935f")
-  const sandB = new THREE.Color("#9c6a44")
-  const tmp = new THREE.Color()
+  const tint = new THREE.Color()
+  // 実写の砂は明るいので、夕方の赤茶の荒野に見えるよう暗めに掛ける
+  const warm = new THREE.Color(0.62, 0.46, 0.38)
+  const pale = new THREE.Color(0.78, 0.64, 0.55)
   for (let i = 0; i < pos.count; i++) {
     const x = pos.getX(i)
     const z = pos.getZ(i)
@@ -60,49 +65,36 @@ export function createTerrain(road: Road) {
     const away = THREE.MathUtils.smoothstep(dist, 14, 140)
     // 道より少し下げておく（道の面とちらつかないように）
     pos.setY(i, away * (fbm(x, z) * 26 - 6) - 0.04)
-    const n = noise(x * 0.05 + 11, z * 0.05)
-    tmp.lerpColors(sandA, sandB, n * 0.8 + away * 0.2)
-    colors.set([tmp.r, tmp.g, tmp.b], i * 3)
+    tint.lerpColors(warm, pale, noise(x * 0.02 + 11, z * 0.02))
+    colors.set([tint.r, tint.g, tint.b], i * 3)
   }
   geo.setAttribute("color", new THREE.BufferAttribute(colors, 3))
   geo.computeVertexNormals()
-  const groundMat = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 1, metalness: 0 })
+
+  // 砂のテクスチャは地面専用なので、そのまま地面の大きさぶん繰り返す（解放は assets 側）
+  const { map, normalMap, armMap } = sand
+  for (const t of [map, normalMap, armMap]) t.repeat.set(size.x / TILE, size.z / TILE)
+  const groundMat = new THREE.MeshStandardMaterial({
+    map,
+    normalMap,
+    roughnessMap: armMap,
+    aoMap: armMap,
+    aoMapIntensity: 0.6,
+    vertexColors: true,
+    roughness: 1,
+    metalness: 0,
+    normalScale: new THREE.Vector2(1.2, 1.2),
+  })
   const ground = new THREE.Mesh(geo, groundMat)
   ground.receiveShadow = true
   ground.name = "ground"
   group.add(ground)
-
-  // 地平線のメサ。霧で色が抜け、シルエットとして残る
-  const r = rng(21)
-  const mesaMat = new THREE.MeshStandardMaterial({ color: "#8b4a30", roughness: 1, flatShading: true })
-  const mesaGeos: THREE.BufferGeometry[] = []
-  for (let k = 0; k < 16; k++) {
-    const top = 20 + r() * 50
-    const g = new THREE.CylinderGeometry(top, top * (1.25 + r() * 0.35), 30 + r() * 70, 7 + Math.floor(r() * 3), 1)
-    // 全周に並べる（後ろを振り返る場面でも地平線が寂しくならない）
-    const angle = (k / 16) * Math.PI * 2 + (r() - 0.5) * 0.25
-    const dist = 520 + r() * 200
-    const x = 300 + Math.cos(angle) * dist * 1.3
-    const z = Math.sin(angle) * dist
-    const hgt = (g.parameters as { height: number }).height
-    g.scale(1 + r() * 1.6, 1, 1)
-    g.rotateY(r() * Math.PI)
-    g.translate(x, hgt / 2 - 6, z)
-    mesaGeos.push(g)
-  }
-  const mesaGeo = mergeGeometries(mesaGeos)!
-  mesaGeos.forEach((g) => g.dispose())
-  const mesas = new THREE.Mesh(mesaGeo, mesaMat)
-  mesas.name = "mesas"
-  group.add(mesas)
 
   return {
     group,
     dispose() {
       geo.dispose()
       groundMat.dispose()
-      mesaGeo.dispose()
-      mesaMat.dispose()
     },
   }
 }

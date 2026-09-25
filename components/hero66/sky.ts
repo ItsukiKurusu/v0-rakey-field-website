@@ -1,6 +1,7 @@
-// 空：夕暮れ → たそがれ → 夜のグラデーション、沈む太陽とにじみ、夜の星。
-// 大きな球の内側に描き、カメラ位置へ毎フレーム寄せる（どこまで走っても地平線が遠いまま）。
+// 空：実写の空（HDRI の帯）を時間でつなぐ。夕暮れ（klippad）→ たそがれ（toposcope）→ 夜（たそがれを暗くして
+// 山の影だけ残し、上空は自前のグラデーションと星）。大きな球の内側に描き、カメラ位置へ毎フレーム寄せる。
 import * as THREE from "three"
+import type { SkyAsset } from "./assets"
 import { SKY } from "./constants"
 
 const vert = /* glsl */ `
@@ -13,12 +14,17 @@ void main() {
 }`
 
 const frag = /* glsl */ `
+uniform sampler2D uBandA;
+uniform sampler2D uBandB;
+uniform float uWeightA;
+uniform float uWeightB;
+uniform float uExposureA;
+uniform float uExposureB;
+uniform vec3 uTintA;
+uniform vec2 uRange; // 帯の高度の範囲（ラジアン）
 uniform vec3 uZenith;
-uniform vec3 uMid;
 uniform vec3 uHorizon;
-uniform vec3 uSunDir;
-uniform vec3 uSunColor;
-uniform float uSunStrength;
+uniform float uNight;
 uniform float uStars;
 uniform float uTime;
 varying vec3 vDir;
@@ -29,21 +35,27 @@ float hash(vec3 p) {
   return fract(p.x * p.y * p.z * (p.x + p.y + p.z));
 }
 
+// 帯の 8bit 値 → 元の明るさ（y = (x/(1+x))^(1/2.2) の逆）
+vec3 band(sampler2D t, vec3 dir) {
+  float u = atan(dir.z, dir.x) / 6.28318530718 + 0.5;
+  float el = asin(clamp(dir.y, -1.0, 1.0));
+  float v = clamp((el - uRange.x) / (uRange.y - uRange.x), 0.0, 1.0);
+  vec3 r = pow(texture2D(t, vec2(u, v)).rgb, vec3(2.2));
+  r = min(r, vec3(0.985));
+  return r / (1.0 - r);
+}
+
 void main() {
   vec3 dir = normalize(vDir);
   float h = dir.y;
-  vec3 col = mix(uHorizon, uMid, smoothstep(0.0, 0.2, h));
-  col = mix(col, uZenith, smoothstep(0.14, 0.75, h));
-  // 地平線の下は少し暗く（地面の外周が見えたときの受け）
-  col = mix(col, uHorizon * 0.55, smoothstep(0.0, -0.08, h));
+  // 夜の上空（深い青）
+  vec3 grad = mix(uHorizon, uZenith, smoothstep(0.0, 0.6, h));
+  vec3 col = grad;
+  if (uWeightB > 0.001) col = mix(col, band(uBandB, dir) * uExposureB, uWeightB);
+  if (uWeightA > 0.001) col = mix(col, band(uBandA, dir) * uExposureA * uTintA, uWeightA);
+  // 夜：山の影は残しつつ、上空だけ深い青へ寄せる
+  col = mix(col, grad + col * 0.35, uNight * smoothstep(0.03, 0.35, h));
 
-  // 太陽の方向ほど明るく色づく
-  float d = max(dot(dir, uSunDir), 0.0);
-  col += uSunColor * (pow(d, 6.0) * 0.35 + pow(d, 48.0) * 0.8) * uSunStrength;
-  float disk = smoothstep(0.99955, 0.99975, d);
-  col += uSunColor * disk * 12.0 * uSunStrength;
-
-  // 星：方向を細かい格子に割り、まれな格子だけ光らせる
   if (uStars > 0.001 && h > 0.0) {
     vec3 p = dir * 320.0;
     vec3 cell = floor(p);
@@ -52,58 +64,55 @@ void main() {
     float tw = 0.6 + 0.4 * sin(uTime * (1.5 + r * 3.0) + r * 40.0);
     vec3 f = fract(p) - 0.5;
     float core = smoothstep(0.35, 0.0, length(f));
-    col += vec3(0.9, 0.95, 1.0) * star * core * tw * uStars * smoothstep(0.02, 0.25, h) * 2.2;
+    col += vec3(0.9, 0.95, 1.0) * star * core * tw * uStars * smoothstep(0.04, 0.25, h) * 2.2;
   }
   gl_FragColor = vec4(col, 1.0);
   #include <tonemapping_fragment>
   #include <colorspace_fragment>
 }`
 
-const c = (hex: string) => new THREE.Color(hex)
-const PAL = {
-  sunset: { zenith: c(SKY.sunset.zenith), mid: c(SKY.sunset.mid), horizon: c(SKY.sunset.horizon) },
-  dusk: { zenith: c(SKY.dusk.zenith), mid: c(SKY.dusk.mid), horizon: c(SKY.dusk.horizon) },
-  night: { zenith: c(SKY.night.zenith), mid: c(SKY.night.mid), horizon: c(SKY.night.horizon) },
-}
+const NIGHT = { zenith: new THREE.Color(SKY.night.zenith), horizon: new THREE.Color(SKY.night.horizon) }
 
-export type SkyState = {
-  zenith: THREE.Color
-  mid: THREE.Color
-  horizon: THREE.Color
-  sunDir: THREE.Vector3
-  /** 太陽の高度（ラジアン）。地平線の下では負 */
-  sunElevation: number
-}
-
-/** 1日の進み tod（0 = 夕暮れ、1 = 夜）での空の色と太陽の向き */
-export function skyStateAt(tod: number, out?: SkyState): SkyState {
-  const s = out ?? {
-    zenith: new THREE.Color(),
-    mid: new THREE.Color(),
-    horizon: new THREE.Color(),
-    sunDir: new THREE.Vector3(),
-    sunElevation: 0,
+/** 夕暮れ → たそがれ → 夜の重みと明るさ（tod: 0 = 夕暮れ、1 = 夜） */
+export function skyWeights(tod: number) {
+  const s = THREE.MathUtils.smoothstep
+  const a = 1 - s(tod, 0.22, 0.55) // 夕暮れの空
+  const night = s(tod, 0.55, 1)
+  return {
+    a,
+    b: 1 - a, // たそがれの空（夜も山の影として残す）
+    night,
+    exposureA: SKY.exposure.sunset,
+    // たそがれは暗くなりながら夜へ
+    exposureB: THREE.MathUtils.lerp(SKY.exposure.dusk, SKY.exposure.night, night),
   }
-  const [a, b, t] = tod < 0.5 ? [PAL.sunset, PAL.dusk, tod / 0.5] : [PAL.dusk, PAL.night, (tod - 0.5) / 0.5]
-  s.zenith.lerpColors(a.zenith, b.zenith, t)
-  s.mid.lerpColors(a.mid, b.mid, t)
-  s.horizon.lerpColors(a.horizon, b.horizon, t)
-  const el = THREE.MathUtils.degToRad(THREE.MathUtils.lerp(SKY.sun.elevationStart, SKY.sun.elevationEnd, tod))
-  const az = THREE.MathUtils.degToRad(SKY.sun.azimuth)
-  // 方位 0 = +X（道の進む向き）、正の角度で右（+Z）へ
-  s.sunDir.set(Math.cos(el) * Math.cos(az), Math.sin(el), Math.cos(el) * Math.sin(az)).normalize()
-  s.sunElevation = el
-  return s
 }
 
-export function createSky(radius = 1800) {
+export type SkyState = { sunDir: THREE.Vector3; sunElevation: number }
+
+/** 太陽の向き。高度は夕暮れの空の太陽から、夜へ向けて沈める */
+export function sunAt(tod: number, sunsetElevation: number, out: SkyState) {
+  const el = THREE.MathUtils.degToRad(THREE.MathUtils.lerp(sunsetElevation, SKY.sun.elevationEnd, tod))
+  const az = THREE.MathUtils.degToRad(SKY.sun.azimuth)
+  out.sunDir.set(Math.cos(el) * Math.cos(az), Math.sin(el), Math.cos(el) * Math.sin(az)).normalize()
+  out.sunElevation = el
+  return out
+}
+
+export function createSky(sky: { sunset: SkyAsset; dusk: SkyAsset }, radius = 1800) {
+  const deg = THREE.MathUtils.degToRad
   const uniforms = {
-    uZenith: { value: new THREE.Color() },
-    uMid: { value: new THREE.Color() },
-    uHorizon: { value: new THREE.Color() },
-    uSunDir: { value: new THREE.Vector3(1, 0.1, 0) },
-    uSunColor: { value: new THREE.Color("#ffb46a") },
-    uSunStrength: { value: 1 },
+    uBandA: { value: sky.sunset.bandTex },
+    uBandB: { value: sky.dusk.bandTex },
+    uWeightA: { value: 1 },
+    uWeightB: { value: 0 },
+    uExposureA: { value: 1 },
+    uExposureB: { value: 1 },
+    uTintA: { value: new THREE.Color(SKY.sunsetTint) },
+    uRange: { value: new THREE.Vector2(deg(sky.sunset.bandLow), deg(sky.sunset.bandHigh)) },
+    uZenith: { value: NIGHT.zenith.clone() },
+    uHorizon: { value: NIGHT.horizon.clone() },
+    uNight: { value: 0 },
     uStars: { value: 0 },
     uTime: { value: 0 },
   }
@@ -121,14 +130,14 @@ export function createSky(radius = 1800) {
   mesh.renderOrder = -10
   mesh.name = "sky"
 
-  const apply = (s: SkyState, tod: number, time: number) => {
-    uniforms.uZenith.value.copy(s.zenith)
-    uniforms.uMid.value.copy(s.mid)
-    uniforms.uHorizon.value.copy(s.horizon)
-    uniforms.uSunDir.value.copy(s.sunDir)
-    // 沈むにつれて光を失う
-    uniforms.uSunStrength.value = THREE.MathUtils.smoothstep(s.sunElevation, -0.12, 0.03)
-    uniforms.uStars.value = THREE.MathUtils.smoothstep(tod, 0.55, 1)
+  const apply = (tod: number, time: number) => {
+    const w = skyWeights(tod)
+    uniforms.uWeightA.value = w.a
+    uniforms.uWeightB.value = w.b
+    uniforms.uExposureA.value = w.exposureA
+    uniforms.uExposureB.value = w.exposureB
+    uniforms.uNight.value = w.night
+    uniforms.uStars.value = w.night
     uniforms.uTime.value = time
   }
 

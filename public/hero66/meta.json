@@ -1,0 +1,41 @@
+{
+  "sky": {
+    "sunset": {
+      "band": "klippad_sunrise_2_band.jpg",
+      "env": "klippad_sunrise_2_env.hdr",
+      "sunElevation": 9.9755859375,
+      "sunAzimuth": -18,
+      "horizon": [
+        0.20148347253384796,
+        0.15730390989262125,
+        0.12358231518579565
+      ],
+      "bandLow": -8,
+      "bandHigh": 90
+    },
+    "dusk": {
+      "band": "toposcope_sunset_band.jpg",
+      "env": "toposcope_sunset_env.hdr",
+      "sunElevation": 2.5048828125,
+      "sunAzimuth": -18,
+      "horizon": [
+        1.9163469931353694,
+        1.259888365216877,
+        0.8813117055789285
+      ],
+      "bandLow": -8,
+      "bandHigh": 90
+    }
+  },
+  "ground": {
+    "diff": "tex/red_sand_diff.webp",
+    "arm": "tex/red_sand_arm.webp",
+    "nor": "tex/red_sand_nor.webp"
+  },
+  "road": {
+    "diff": "tex/asphalt_02_diff.webp",
+    "arm": "tex/asphalt_02_arm.webp",
+    "nor": "tex/asphalt_02_nor.webp"
+  },
+  "rock": "boulder.glb"
+}
