@@ -1,12 +1,14 @@
 "use client"
 
 import { useEffect } from "react"
+import { usePathname } from "next/navigation"
 
 /**
- * .reveal の要素が画面に入ったら data-shown を付ける（見た目は CSS）。ページに1つだけ置く。
+ * .reveal の要素が画面に入ったら data-shown を付ける（見た目は CSS）。layout に1つだけ置き、ページが変わるたびに見直す。
  * 1つの IntersectionObserver で全部を見るので、要素がいくつあっても軽い。
  */
 export function RevealObserver() {
+  const pathname = usePathname()
   useEffect(() => {
     const els = Array.from(document.querySelectorAll<HTMLElement>(".reveal:not([data-shown])"))
     if (!("IntersectionObserver" in window)) {
@@ -25,6 +27,6 @@ export function RevealObserver() {
     )
     els.forEach((el) => io.observe(el))
     return () => io.disconnect()
-  }, [])
+  }, [pathname])
   return null
 }

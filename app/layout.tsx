@@ -5,6 +5,7 @@ import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 import SmoothScrollProvider from '@/components/SmoothScrollProvider'
 import { MobileCallBar } from '@/components/site/MobileCallBar'
+import { RevealObserver } from '@/components/site/RevealObserver'
 import { SITE_URL } from '@/lib/site'
 
 
@@ -176,6 +177,7 @@ export default function RootLayout({
       <body className={`${notoSansJP.variable} ${bebasNeue.variable} ${alfaSlab.variable} font-sans antialiased`}>
         <SmoothScrollProvider>{children}</SmoothScrollProvider>
         <MobileCallBar />
+        <RevealObserver />
         <Analytics />
         <script
           type="application/ld+json"

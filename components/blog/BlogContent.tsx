@@ -6,7 +6,7 @@ import type { BlogContentBlock } from "@/lib/blog-posts"
 function renderInline(text: string) {
   return text.split(/(\*\*[^*]+\*\*)/g).map((part, i) =>
     part.startsWith("**") && part.endsWith("**") ? (
-      <strong key={i} className="font-bold text-foreground">
+      <strong key={i} className="font-bold text-ink [background:linear-gradient(transparent_62%,rgba(217,164,65,0.45)_62%)]">
         {part.slice(2, -2)}
       </strong>
     ) : (
@@ -17,7 +17,7 @@ function renderInline(text: string) {
 
 export function BlogContent({ blocks }: { blocks: BlogContentBlock[] }) {
   return (
-    <div className="space-y-6">
+    <div className="space-y-7 text-ink">
       {blocks.map((block, i) => {
         if (block.type === "heading") {
           const Tag = block.level === 2 ? "h2" : "h3"
@@ -26,8 +26,8 @@ export function BlogContent({ blocks }: { blocks: BlogContentBlock[] }) {
               key={i}
               className={
                 block.level === 2
-                  ? "text-2xl md:text-3xl font-bold text-foreground pt-4"
-                  : "text-xl md:text-2xl font-bold text-foreground pt-2"
+                  ? "relative border-l-[6px] border-mustard pl-4 pt-1 text-2xl font-black leading-snug md:text-[1.75rem] mt-14"
+                  : "text-xl font-black leading-snug md:text-[1.35rem] mt-10 flex items-center gap-2 before:h-2 before:w-2 before:shrink-0 before:rounded-full before:bg-rust"
               }
             >
               {block.text}
@@ -37,7 +37,7 @@ export function BlogContent({ blocks }: { blocks: BlogContentBlock[] }) {
 
         if (block.type === "paragraph") {
           return (
-            <p key={i} className="text-base text-foreground/80 leading-relaxed">
+            <p key={i} className="text-base leading-[2.05] text-ink/85 md:text-[1.05rem]">
               {renderInline(block.text)}
             </p>
           )
@@ -45,7 +45,7 @@ export function BlogContent({ blocks }: { blocks: BlogContentBlock[] }) {
 
         if (block.type === "image") {
           return (
-            <div key={i} className="rounded-2xl overflow-hidden shadow-md">
+            <div key={i} className="overflow-hidden rounded-xl shadow-[0_20px_40px_-24px_rgba(40,25,10,0.7)]">
               <Image
                 src={block.src}
                 alt={block.alt}
@@ -60,7 +60,7 @@ export function BlogContent({ blocks }: { blocks: BlogContentBlock[] }) {
 
         if (block.type === "video") {
           return (
-            <div key={i} className="rounded-2xl overflow-hidden shadow-md">
+            <div key={i} className="overflow-hidden rounded-xl shadow-[0_20px_40px_-24px_rgba(40,25,10,0.7)]">
               {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
               <video src={block.src} controls className="w-full h-auto" />
             </div>
@@ -72,10 +72,10 @@ export function BlogContent({ blocks }: { blocks: BlogContentBlock[] }) {
           return (
             <ListTag
               key={i}
-              className={`space-y-2 pl-5 text-foreground/80 ${block.ordered ? "list-decimal" : "list-disc"}`}
+              className={`space-y-2 rounded-xl bg-white/40 py-5 pl-10 pr-5 text-ink/85 marker:font-bold marker:text-rust ${block.ordered ? "list-decimal" : "list-disc"}`}
             >
               {block.items.map((item, j) => (
-                <li key={j} className="leading-relaxed">
+                <li key={j} className="leading-[1.9]">
                   {item}
                 </li>
               ))}
@@ -85,14 +85,14 @@ export function BlogContent({ blocks }: { blocks: BlogContentBlock[] }) {
 
         if (block.type === "table") {
           return (
-            <div key={i} className="overflow-x-auto rounded-2xl border border-border">
+            <div key={i} className="overflow-x-auto rounded-xl border border-ink/15 bg-white/40">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="bg-secondary">
+                  <tr className="bg-ink text-paper">
                     {block.headers.map((h, j) => (
                       <th
                         key={j}
-                        className="px-4 py-3 text-left font-bold text-foreground whitespace-nowrap"
+                        className="whitespace-nowrap px-4 py-3 text-left font-bold"
                       >
                         {h}
                       </th>
@@ -101,9 +101,9 @@ export function BlogContent({ blocks }: { blocks: BlogContentBlock[] }) {
                 </thead>
                 <tbody>
                   {block.rows.map((row, j) => (
-                    <tr key={j} className="border-t border-border">
+                    <tr key={j} className="border-t border-ink/10 even:bg-paper-deep/40">
                       {row.map((cell, k) => (
-                        <td key={k} className="px-4 py-3 text-foreground/80">
+                        <td key={k} className="px-4 py-3 text-ink/85">
                           {cell}
                         </td>
                       ))}
@@ -119,7 +119,7 @@ export function BlogContent({ blocks }: { blocks: BlogContentBlock[] }) {
           return (
             <div
               key={i}
-              className="rounded-2xl bg-primary/10 border border-primary/20 p-5 text-foreground font-medium leading-relaxed"
+              className="rounded-xl border-2 border-dashed border-mustard bg-mustard/10 p-5 font-bold leading-[1.9] text-ink"
             >
               {block.text}
             </div>
@@ -128,11 +128,11 @@ export function BlogContent({ blocks }: { blocks: BlogContentBlock[] }) {
 
         if (block.type === "cta") {
           return (
-            <div key={i} className="rounded-2xl bg-primary/10 border border-primary/20 p-6">
-              <p className="text-foreground font-medium leading-relaxed mb-4">{block.text}</p>
+            <div key={i} className="rounded-xl bg-ink p-6 text-paper md:p-7">
+              <p className="mb-5 font-bold leading-[1.9]">{block.text}</p>
               <Link
                 href={block.href}
-                className="inline-flex items-center gap-1.5 text-sm font-bold text-primary hover:underline"
+                className="inline-flex items-center gap-2 rounded-full bg-rust px-5 py-2.5 text-sm font-bold text-paper transition-colors hover:bg-[#c64d35]"
               >
                 {block.label}
                 <ArrowRight className="h-3.5 w-3.5" />
