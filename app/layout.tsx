@@ -4,6 +4,7 @@ import { Noto_Sans_JP, Bebas_Neue, Alfa_Slab_One } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 import SmoothScrollProvider from '@/components/SmoothScrollProvider'
+import { MobileCallBar } from '@/components/site/MobileCallBar'
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://rakey-field.com'
 
@@ -174,6 +175,7 @@ export default function RootLayout({
     <html lang="ja" className="bg-background">
       <body className={`${notoSansJP.variable} ${bebasNeue.variable} ${alfaSlab.variable} font-sans antialiased`}>
         <SmoothScrollProvider>{children}</SmoothScrollProvider>
+        <MobileCallBar />
         <Analytics />
         <script
           type="application/ld+json"

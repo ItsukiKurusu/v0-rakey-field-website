@@ -14,7 +14,7 @@ const LINKS = [
 /** フッター（夜の道の終わり） */
 export function Footer() {
   return (
-    <footer className="asphalt relative overflow-hidden border-t border-paper/10 pb-10 pt-16">
+    <footer className="asphalt relative overflow-hidden border-t border-paper/10 pb-28 pt-16 lg:pb-10">
       <div className="mx-auto grid max-w-6xl gap-12 px-5 md:grid-cols-12 md:px-8">
         <div className="md:col-span-5">
           <Link href="/" className="inline-flex items-center gap-4">

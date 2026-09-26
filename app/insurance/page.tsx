@@ -89,7 +89,7 @@ export default function InsurancePage() {
                     保険を相談する
                   </Button>
                 </DialogTrigger>
-                <ContactModal />
+                <ContactModal type="insurance" />
               </Dialog>
               <a href="tel:0723394549">
                 <Button size="lg" className="rounded-full px-8 text-base bg-white/15 text-white border border-white/50 hover:bg-white/25">
@@ -181,7 +181,7 @@ export default function InsurancePage() {
                       メールで問い合わせる
                     </Button>
                   </DialogTrigger>
-                  <ContactModal />
+                  <ContactModal type="insurance" />
                 </Dialog>
               </div>
               <p className="text-sm text-muted-foreground mt-6">

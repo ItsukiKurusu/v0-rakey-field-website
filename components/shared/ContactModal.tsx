@@ -1,44 +1,26 @@
-import { Phone } from "lucide-react"
-import { DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Label } from "@/components/ui/label"
-import { Button } from "@/components/ui/button"
+"use client"
 
-export function ContactModal() {
+import { Phone } from "lucide-react"
+import { DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { ContactForm } from "@/components/site/ContactForm"
+import type { InquiryType } from "@/lib/contact"
+import { SITE } from "@/lib/site"
+
+/** サービスページのお問い合わせモーダル。type でご用件を選んだ状態にする */
+export function ContactModal({ type = "other" }: { type?: InquiryType }) {
   return (
-    <DialogContent className="max-w-md mx-4">
-      <DialogHeader>
-        <DialogTitle className="text-xl font-bold text-foreground">お問い合わせ</DialogTitle>
-      </DialogHeader>
-      <div className="space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="modal-name">お名前</Label>
-          <Input id="modal-name" placeholder="山田 太郎" className="text-base" />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="modal-email">メールアドレス</Label>
-          <Input id="modal-email" type="email" placeholder="example@email.com" className="text-base" />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="modal-phone">電話番号</Label>
-          <Input id="modal-phone" type="tel" placeholder="090-1234-5678" className="text-base" />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="modal-message">お問い合わせ内容</Label>
-          <Textarea id="modal-message" placeholder="ご相談内容をご記入ください" rows={4} className="text-base" />
-        </div>
-        <Button className="w-full bg-destructive text-destructive-foreground hover:bg-destructive/90">
-          送信する
-        </Button>
-        <div className="pt-4 border-t border-border">
-          <p className="text-sm text-muted-foreground mb-2">お電話でのお問い合わせ</p>
-          <a href="tel:072-339-4549" className="flex items-center gap-2 text-primary font-medium hover:underline">
-            <Phone className="h-4 w-4" />
-            072-339-4549
+    <DialogContent data-lenis-prevent className="max-h-[90dvh] overflow-y-auto border-none bg-paper p-0 sm:max-w-xl">
+      <DialogHeader className="px-6 pt-6 text-left md:px-8">
+        <DialogTitle className="text-xl font-black text-ink">お問い合わせ</DialogTitle>
+        <DialogDescription className="text-sm text-ink/70">
+          お急ぎの方はお電話で：
+          <a href={SITE.tel.href} className="ml-1 inline-flex items-center gap-1 font-bold text-rust">
+            <Phone className="h-3.5 w-3.5" aria-hidden="true" />
+            {SITE.tel.display}
           </a>
-        </div>
-      </div>
+        </DialogDescription>
+      </DialogHeader>
+      <ContactForm defaultType={type} />
     </DialogContent>
   )
 }
