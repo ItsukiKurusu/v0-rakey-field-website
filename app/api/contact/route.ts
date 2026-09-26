@@ -6,7 +6,7 @@ import { SITE } from "@/lib/site"
 /*
  * お問い合わせの送信。環境変数（.env.local と Vercel に設定）：
  *   RESEND_API_KEY  … Resend の API キー（必須）
- *   CONTACT_TO      … 通知の宛先（省略時は SITE.email）
+ *   CONTACT_TO      … 通知の宛先。カンマ区切りで複数可（省略時は SITE.email）
  *   CONTACT_FROM    … 差出人。Resend でドメイン認証したアドレス（例: "RAKEY FIELD <info@rakey-field.com>"）
  *                     未設定なら onboarding@resend.dev から送る（その場合は Resend に登録したメール宛にしか届かず、
  *                     お客様への自動返信も送らない）
@@ -88,7 +88,10 @@ export async function POST(req: Request) {
   const resend = new Resend(apiKey)
   const verifiedFrom = process.env.CONTACT_FROM
   const from = verifiedFrom || "RAKEY FIELD <onboarding@resend.dev>"
-  const to = process.env.CONTACT_TO || SITE.email
+  const to = (process.env.CONTACT_TO || SITE.email)
+    .split(",")
+    .map((a) => a.trim())
+    .filter(Boolean)
 
   const notice = await resend.emails.send({
     from,
@@ -108,7 +111,7 @@ export async function POST(req: Request) {
     const reply = await resend.emails.send({
       from: verifiedFrom,
       to: d.email,
-      replyTo: to,
+      replyTo: to[0], // お客様の返信はお店（先頭の宛先）へ
       subject: "【RAKEY FIELD】お問い合わせありがとうございます",
       text: `${d.name} 様\n\nRAKEY FIELD にお問い合わせいただき、ありがとうございます。\n内容を確認のうえ、担当よりご連絡いたします。\nお急ぎの場合はお電話（${SITE.tel.display}／${SITE.hours}・${SITE.closed}）でどうぞ。\n\n――― 送信内容 ―――\n\n${toText(d)}\n\n――――――――――\nRAKEY FIELD\n${SITE.address.postal} ${SITE.address.full}\nTEL ${SITE.tel.display}`,
     })
