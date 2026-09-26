@@ -40,26 +40,54 @@ function acesFilmic(c: THREE.Color, exposure: number) {
 }
 const srgbEncode = (x: number) => (x <= 0.0031308 ? x * 12.92 : 1.055 * Math.pow(x, 1 / 2.4) - 0.055)
 
-export type HeroScene = ReturnType<typeof createHeroScene>
+export type HeroScene = Awaited<ReturnType<typeof createHeroScene>>
 
-export function createHeroScene(renderer: THREE.WebGLRenderer, profile: DeviceProfile, assets: HeroAssets) {
+/**
+ * 重い組み立ての合間にブラウザへ手番を返す（1回の処理が長く続くと、画面が固まって見える）。
+ * setTimeout は隠れたタブでも進む（requestAnimationFrame は止まる）
+ */
+const yieldToMain = () =>
+  new Promise<void>((resolve) => {
+    const s = (globalThis as { scheduler?: { yield?: () => Promise<void> } }).scheduler
+    if (s?.yield) s.yield().then(resolve)
+    else setTimeout(resolve, 0)
+  })
+
+export async function createHeroScene(
+  renderer: THREE.WebGLRenderer,
+  profile: DeviceProfile,
+  assets: HeroAssets,
+  onStep: (done: number) => void = () => {},
+) {
+  // 組み立ての段数（進み具合のゲージ用）
+  const STEPS = 7
+  let step = 0
+  const next = async () => {
+    onStep(++step / STEPS)
+    await yieldToMain()
+  }
   const scene = new THREE.Scene()
   const camera = new THREE.PerspectiveCamera(38, 16 / 9, 0.1, 2600)
 
   const road = createRoad()
   const roadMesh = createRoadMesh(road, assets.road, assets.shoulder, assets.noise)
+  await next()
   const terrain = createTerrain(road, assets.ground, assets.groundRocks, assets.noise, profile.isMobile)
+  await next()
   const signs = createSigns(road)
   const garage = createGarage(road, assets.garage)
+  await next()
 
   // 看板・標識・ガレージの周りには小物を置かない
   const keep: Array<{ x: number; z: number; r: number }> = []
   signs.group.children.forEach((o) => keep.push({ x: o.position.x, z: o.position.z, r: 7 }))
   keep.push({ x: garage.group.position.x, z: garage.group.position.z, r: 13 })
   const roadside = createRoadside(road, keep, { rock: assets.rock, grass: assets.grass, shrub: assets.shrub }, profile.isMobile, terrain.groundAt)
+  await next()
 
   const sky = createSky(assets.sky)
   const impala = createImpala()
+  await next()
   // 夕陽の映り込みでヘッドライトが点いて見えないよう、レンズの映り込みを弱める（このヒーローだけ）
   impala.materials.lensClear.envMapIntensity = 0.55
   impala.materials.lensClear.metalness = 0.25 // 低い夕陽がメッキに当たって光るのも抑える
@@ -99,8 +127,10 @@ export function createHeroScene(renderer: THREE.WebGLRenderer, profile: DevicePr
   // --- 映り込み：実写の空（小さな .hdr）を PMREM に。夜はたそがれの空を暗くして使う ---
   const pmrem = new THREE.PMREMGenerator(renderer)
   const envSunset = pmrem.fromEquirectangular(assets.sky.sunset.envTex)
+  await next()
   const envDusk = pmrem.fromEquirectangular(assets.sky.dusk.envTex)
   scene.environment = envSunset.texture
+  await next()
 
   // --- ブルーム（デスクトップだけ）。発光（ランプ・ネオン・太陽）だけがにじむよう、しきい値は 1 より上 ---
   let composer: EffectComposer | null = null
@@ -202,15 +232,22 @@ export function createHeroScene(renderer: THREE.WebGLRenderer, profile: DevicePr
    * 最初に全部のシェーダーとテクスチャを GPU に載せておく。
    * 画面に初めて入った物（ガレージ・看板など）がその場でコンパイルされると、一瞬止まる
    */
-  const warmup = () => {
-    renderer.compile(scene, camera)
+  const warmup = async () => {
+    // シェーダーは裏でコンパイルさせる（KHR_parallel_shader_compile が使えればメインスレッドを止めない）
+    await renderer.compileAsync(scene, camera)
+    // テクスチャの GPU 転送は1枚ずつ手番を返しながら
+    const textures = new Set<THREE.Texture>()
     scene.traverse((o) => {
       const mesh = o as THREE.Mesh
       if (!mesh.isMesh) return
       for (const m of Array.isArray(mesh.material) ? mesh.material : [mesh.material]) {
-        for (const v of Object.values(m)) if ((v as THREE.Texture)?.isTexture) renderer.initTexture(v as THREE.Texture)
+        for (const v of Object.values(m)) if ((v as THREE.Texture)?.isTexture) textures.add(v as THREE.Texture)
       }
     })
+    for (const t of textures) {
+      renderer.initTexture(t)
+      await yieldToMain()
+    }
   }
 
   const render = () => {

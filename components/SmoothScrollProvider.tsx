@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { usePathname } from "next/navigation"
 import Lenis from "lenis"
 import gsap from "gsap"
@@ -38,6 +38,8 @@ export default function SmoothScrollProvider({ children }: { children: React.Rea
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
   const lenisRef = useRef<Lenis | null>(null)
   const pathname = usePathname()
+  // Lenis がまだ無い（作り直し中）ときに頼まれた固定も覚えておき、作ったら反映する
+  const scrollLockedRef = useRef(false)
 
   const motionStopped = motionChoice ?? prefersReducedMotion
 
@@ -65,6 +67,14 @@ export default function SmoothScrollProvider({ children }: { children: React.Rea
     }
   }
 
+  const setScrollLocked = useCallback((locked: boolean) => {
+    scrollLockedRef.current = locked
+    const lenis = lenisRef.current
+    if (!lenis) return
+    if (locked) lenis.stop()
+    else lenis.start()
+  }, [])
+
   useEffect(() => {
     document.documentElement.classList.toggle("motion-stopped", motionStopped)
     if (motionStopped) return
@@ -81,6 +91,7 @@ export default function SmoothScrollProvider({ children }: { children: React.Rea
       autoRaf: false, // RAF は gsap.ticker に一本化する
     })
     lenisRef.current = lenis
+    if (scrollLockedRef.current) lenis.stop()
     // Lenis が実スクロールの持ち主なので、演出の位置を外から決めるにはこの実体に頼む（開発時のみ公開）
     if (process.env.NODE_ENV === "development") {
       ;(window as unknown as Record<string, unknown>).__lenis = lenis
@@ -111,7 +122,7 @@ export default function SmoothScrollProvider({ children }: { children: React.Rea
   }, [pathname, motionStopped])
 
   return (
-    <MotionContext.Provider value={{ motionStopped, prefersReducedMotion, setMotionStopped, ticker }}>
+    <MotionContext.Provider value={{ motionStopped, prefersReducedMotion, setMotionStopped, ticker, setScrollLocked }}>
       {children}
       {/* OS 設定で止めている人にだけ、戻す手段を出す。ラベルは状態ではなく動作を書く */}
       {prefersReducedMotion && (

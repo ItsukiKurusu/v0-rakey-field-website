@@ -3,14 +3,39 @@
 // トップの3Dヒーロー。文字（h1・幕ごとの言葉・ボタン）は HTML で先に出し、3D は準備ができたら重ねる。
 // 3D の本体は dynamic import（ssr: false）で、トップ以外のページの JS を増やさない。
 import dynamic from "next/dynamic"
-import { useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { Phone } from "lucide-react"
+import { useMotionState } from "@/components/motion-state"
 import { HERO_LINES } from "@/lib/heroLines"
+
+// 準備が長引いても、ここまで待ったらスクロールを返す（通信が極端に遅い・どこかで止まった場合の保険）
+const LOCK_TIMEOUT_MS = 12000
 
 const HeroCanvas = dynamic(() => import("./HeroCanvas"), { ssr: false })
 
 export function HeroSection() {
   const [ready, setReady] = useState(false)
+  const [loaded, setLoaded] = useState(0)
+  const { motionStopped, setScrollLocked } = useMotionState()
+
+  // 3D の準備中はスクロールを止める。止めないと、待っている間のスクロールで
+  // 準備ができた瞬間に物語の途中から始まってしまう。
+  // ページの途中で開き直した人（位置の復元）は止めない
+  useEffect(() => {
+    if (ready || motionStopped || window.scrollY > 40) return
+    window.scrollTo(0, 0)
+    setScrollLocked(true)
+    const t = window.setTimeout(() => setScrollLocked(false), LOCK_TIMEOUT_MS)
+    return () => {
+      window.clearTimeout(t)
+      setScrollLocked(false)
+    }
+  }, [ready, motionStopped, setScrollLocked])
+
+  const onReady = useCallback(() => {
+    setLoaded(1)
+    setReady(true)
+  }, [])
 
   return (
     <section
@@ -19,7 +44,7 @@ export function HeroSection() {
       className={`relative h-svh min-h-[560px] w-full overflow-hidden bg-[#1b1916] text-white ${ready ? "hero-ready" : ""}`}
     >
       <div className="hero-poster" aria-hidden="true" />
-      <HeroCanvas onReady={() => setReady(true)} />
+      <HeroCanvas onReady={onReady} onProgress={setLoaded} />
       <div className="hero-vignette" aria-hidden="true" />
 
       {/* 冒頭の見出し（スクロールで消えるが、DOM には残す） */}
@@ -77,10 +102,24 @@ export function HeroSection() {
         </a>
       </div>
 
-      {/* スクロールの合図（見出しと一緒に消える） */}
+      {/* スクロールの合図（見出しと一緒に消える）。準備中は「エンジンを温めている」ゲージ */}
       <div className="hero-title pointer-events-none absolute bottom-6 left-1/2 z-10 -translate-x-1/2 text-center" aria-hidden="true">
-        <span className="font-display text-xs tracking-[0.4em] text-white/70">SCROLL</span>
-        <span className="mx-auto mt-2 block h-10 w-px animate-pulse bg-white/60" />
+        {ready || motionStopped ? (
+          <>
+            <span className="font-display text-xs tracking-[0.4em] text-white/70">SCROLL</span>
+            <span className="mx-auto mt-2 block h-10 w-px animate-pulse bg-white/60" />
+          </>
+        ) : (
+          <span className="block">
+            <span className="font-display text-xs tracking-[0.4em] text-white/70">WARMING UP</span>
+            <span className="mx-auto mt-3 block h-1 w-28 overflow-hidden rounded-full bg-white/20">
+              <span
+                className="block h-full origin-left rounded-full bg-[#d9a441] transition-transform duration-500 ease-out"
+                style={{ transform: `scaleX(${Math.max(0.06, loaded)})` }}
+              />
+            </span>
+          </span>
+        )}
       </div>
     </section>
   )

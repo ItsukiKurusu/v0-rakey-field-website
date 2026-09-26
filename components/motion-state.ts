@@ -24,6 +24,8 @@ export type MotionState = {
   setMotionStopped: (stopped: boolean) => void
   /** RAF は gsap.ticker に一本化してある。毎フレームの処理はここに載せる */
   ticker: Ticker
+  /** スクロールを止める／戻す（トップの 3D の準備中に、途中から始まってしまわないように） */
+  setScrollLocked: (locked: boolean) => void
 }
 
 export const MotionContext = createContext<MotionState>({
@@ -31,6 +33,7 @@ export const MotionContext = createContext<MotionState>({
   prefersReducedMotion: false,
   setMotionStopped: () => {},
   ticker: { add: () => {}, remove: () => {} },
+  setScrollLocked: () => {},
 })
 
 /** 3D 側などから「いま演出を動かしてよいか」を読むためのフック */

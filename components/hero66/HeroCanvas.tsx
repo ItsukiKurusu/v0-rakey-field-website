@@ -13,15 +13,21 @@ import { COAST, LAMBDA, STILL_POSE } from "./constants"
 import { createHeroScene } from "./scene"
 import { createChoreography } from "./scrollChoreography"
 
-type Props = { onReady?: () => void }
+type Props = {
+  onReady?: () => void
+  /** 準備の進み具合（0..1）。読み込み中のゲージ用 */
+  onProgress?: (done: number) => void
+}
 
-export default function HeroCanvas({ onReady }: Props) {
+export default function HeroCanvas({ onReady, onProgress }: Props) {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const { motionStopped } = useMotionState()
   const onReadyRef = useRef(onReady)
+  const onProgressRef = useRef(onProgress)
   useEffect(() => {
     onReadyRef.current = onReady
-  }, [onReady])
+    onProgressRef.current = onProgress
+  }, [onReady, onProgress])
 
   useEffect(() => {
     const wrapper = wrapperRef.current
@@ -34,6 +40,10 @@ export default function HeroCanvas({ onReady }: Props) {
 
     const setup = async () => {
       const trigger = wrapper.closest<HTMLElement>("[data-hero]")
+      performance.mark("hero:start")
+      // 段階ごとの目安：素材 〜45% → 組み立て 〜85% → 下準備 〜95% → 最初の1枚
+      const report = (v: number) => onProgressRef.current?.(v)
+      report(0.12)
       const profile = readDeviceProfile()
       const gl = createRenderer(canvas, profile)
       if (!gl) {
@@ -52,15 +62,26 @@ export default function HeroCanvas({ onReady }: Props) {
         onReadyRef.current?.()
         return
       }
+      performance.mark("hero:assets")
+      report(0.45)
       if (cancelled) {
         assets.dispose()
         gl.dispose()
         return
       }
-      const hero = createHeroScene(gl.renderer, profile, assets)
+      const hero = await createHeroScene(gl.renderer, profile, assets, (d) => report(0.45 + d * 0.4))
+      performance.mark("hero:scene")
       const size = gl.applyResolution()
       hero.resize(size.width, size.height)
-      hero.warmup()
+      await hero.warmup()
+      performance.mark("hero:warmup")
+      report(0.95)
+      if (cancelled) {
+        hero.dispose()
+        assets.dispose()
+        gl.dispose()
+        return
+      }
 
       const exposeDev = (setProgress: (p: number) => number) => {
         if (process.env.NODE_ENV !== "development") return
@@ -164,6 +185,7 @@ export default function HeroCanvas({ onReady }: Props) {
       // ループの前に1枚確実に描く（バックグラウンドで開かれても準備完了を伝えられる）
       hero.update(progress, 0)
       hero.render()
+      performance.mark("hero:firstframe")
       onReadyRef.current?.()
 
       const tick = (time: number, deltaMs: number) => {
