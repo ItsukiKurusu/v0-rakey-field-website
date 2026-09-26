@@ -1,6 +1,12 @@
 /**
  * お店の情報（ここが唯一の置き場所）。ヘッダー・フッター・問い合わせ・構造化データはすべてここを読む。
  */
+/**
+ * サイトの正式な URL（canonical・sitemap・OG 画像の基準）。
+ * 独自ドメインを取ったら Vercel の環境変数 NEXT_PUBLIC_SITE_URL に入れるか、ここを書き換える。
+ */
+export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://v0-rakey-field-website.vercel.app").replace(/\/$/, "")
+
 export const SITE = {
   name: "RAKEY FIELD",
   tagline: "地域の人々のカーライフを、一生涯サポートします。",

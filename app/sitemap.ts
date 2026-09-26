@@ -1,7 +1,6 @@
 import type { MetadataRoute } from 'next'
 import { blogPosts } from '@/lib/blog-posts'
-
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://rakey-field.com'
+import { SITE_URL } from '@/lib/site'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes: MetadataRoute.Sitemap = [

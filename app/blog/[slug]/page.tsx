@@ -2,8 +2,8 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getAllBlogSlugs, getBlogPost } from '@/lib/blog-posts'
 import { BlogPostView } from '@/components/blog/BlogPostView'
+import { SITE_URL } from '@/lib/site'
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://rakey-field.com'
 
 export function generateStaticParams() {
   return getAllBlogSlugs().map((slug) => ({ slug }))

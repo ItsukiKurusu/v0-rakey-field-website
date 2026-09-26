@@ -5,8 +5,8 @@ import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 import SmoothScrollProvider from '@/components/SmoothScrollProvider'
 import { MobileCallBar } from '@/components/site/MobileCallBar'
+import { SITE_URL } from '@/lib/site'
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://rakey-field.com'
 
 const notoSansJP = Noto_Sans_JP({
   subsets: ['latin'],
