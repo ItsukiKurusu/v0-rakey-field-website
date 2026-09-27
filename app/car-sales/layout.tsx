@@ -1,11 +1,11 @@
 import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
-import { SITE_URL } from '@/lib/site'
+import { LD_CONTACT, SITE, SITE_URL } from '@/lib/site'
 
 
 export const metadata: Metadata = {
   title: { absolute: '自動車 買取/販売 | 堺市・大阪ならRAKEY FIELD' },
-  description: '堺市中区の自動車買取・販売はRAKEY FIELDへ。お車を手放される際はご相談ください。大切な愛車を責任を持ってお預かりいたします。TEL: 072-339-4549',
+  description: `堺市中区の自動車買取・販売はRAKEY FIELDへ。お車を手放される際はご相談ください。大切な愛車を責任を持ってお預かりいたします。TEL: ${SITE.tel.display}`,
   keywords: [
     '車買取 堺市', '車販売 堺市', '中古車 堺市', '自動車買取 堺市中区',
     '中古車販売 堺市', '車売却 堺市', '車査定 堺市', '中古車 大阪',
@@ -38,15 +38,7 @@ const jsonLd = {
   name: 'RAKEY FIELD 自動車買取・販売',
   description: '新車・中古車の買取から販売まで。大切な愛車を責任を持ってお預かりいたします。',
   url: `${SITE_URL}/car-sales`,
-  telephone: '+81-72-339-4549',
-  address: {
-    '@type': 'PostalAddress',
-    streetAddress: '陶器北845-7',
-    addressLocality: '堺市中区',
-    addressRegion: '大阪府',
-    postalCode: '599-8242',
-    addressCountry: 'JP',
-  },
+  ...LD_CONTACT,
   areaServed: [
     { '@type': 'City', name: '堺市' },
     { '@type': 'AdministrativeArea', name: '大阪府' },

@@ -1,11 +1,11 @@
 import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
-import { SITE_URL } from '@/lib/site'
+import { LD_CONTACT, SITE, SITE_URL } from '@/lib/site'
 
 
 export const metadata: Metadata = {
   title: { absolute: '生命保険・損害保険・自動車保険 | 堺市・大阪ならRAKEY FIELD' },
-  description: '堺市中区の保険相談はRAKEY FIELDへ。生命保険・損害保険・自動車保険のご相談を承ります。お車と一緒に保険もまとめてご相談いただけます。TEL: 072-339-4549',
+  description: `堺市中区の保険相談はRAKEY FIELDへ。生命保険・損害保険・自動車保険のご相談を承ります。お車と一緒に保険もまとめてご相談いただけます。TEL: ${SITE.tel.display}`,
   keywords: [
     '保険 堺市', '自動車保険 堺市', '生命保険 堺市', '損害保険 堺市',
     '保険相談 堺市中区', '自動車保険 大阪', '保険見直し 堺市',
@@ -29,15 +29,7 @@ const jsonLd = {
   name: 'RAKEY FIELD 保険サービス',
   description: '生命保険・損害保険・自動車保険のご相談を承ります。',
   url: `${SITE_URL}/insurance`,
-  telephone: '+81-72-339-4549',
-  address: {
-    '@type': 'PostalAddress',
-    streetAddress: '陶器北845-7',
-    addressLocality: '堺市中区',
-    addressRegion: '大阪府',
-    postalCode: '599-8242',
-    addressCountry: 'JP',
-  },
+  ...LD_CONTACT,
 }
 
 export default function InsuranceLayout({ children }: { children: ReactNode }) {

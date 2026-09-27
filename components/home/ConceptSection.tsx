@@ -28,7 +28,7 @@ export function ConceptSection() {
             }
           />
           <div className="reveal mt-8 space-y-5 text-[0.95rem] leading-[2.1] text-ink/80 md:text-base" style={{ "--reveal-delay": "0.12s" } as React.CSSProperties}>
-            <p>私たちは、この地域（堺市中区）の人々のカーライフを、一生涯サポートします。</p>
+            <p>私たちは、堺市を中心に全国の人々のカーライフを、一生涯サポートします。</p>
             <p>子どもたちが集い、遊び、大人になって車を買う。そして車の相談で、ふらっと立ち寄る。そんな場所を目指しています。</p>
             <p>買取・販売からレンタカー、車検、保険まで。人生の車の相談ごとを、まるごとお引き受けします。</p>
           </div>

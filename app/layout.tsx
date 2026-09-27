@@ -6,7 +6,7 @@ import './globals.css'
 import SmoothScrollProvider from '@/components/SmoothScrollProvider'
 import { MobileCallBar } from '@/components/site/MobileCallBar'
 import { RevealObserver } from '@/components/site/RevealObserver'
-import { SITE_URL } from '@/lib/site'
+import { LD_CONTACT, SITE, SITE_URL } from '@/lib/site'
 
 
 const notoSansJP = Noto_Sans_JP({
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     default: 'RAKEY FIELD | 堺市の中古車・レンタカー・車検・買取',
     template: '%s | RAKEY FIELD',
   },
-  description: '大阪府堺市中区陶器の地域密着カーショップ。中古車の買取・販売、格安レンタカー、車検、板金、メンテナンスまで。お電話一本でなんでも承ります。TEL: 072-339-4549',
+  description: `大阪府堺市中区陶器の地域密着カーショップ。中古車の買取・販売、格安レンタカー、車検、板金、メンテナンスまで。お電話一本でなんでも承ります。TEL: ${SITE.tel.display}`,
   keywords: [
     '中古車 堺市', '中古車 堺市中区', '中古車 大阪',
     'レンタカー 堺市', 'レンタカー 堺市中区', '格安レンタカー 堺市', 'レンタカー 大阪',
@@ -110,17 +110,9 @@ const jsonLd = {
       name: 'RAKEY FIELD',
       description: '大阪府堺市中区陶器の地域密着カーショップ。中古車の買取・販売、格安レンタカー、車検、板金、メンテナンス、保険まで。',
       url: SITE_URL,
-      telephone: '+81-72-339-4549',
+      ...LD_CONTACT,
       priceRange: '¥¥',
       image: `${SITE_URL}/images/og-image.jpg`,
-      address: {
-        '@type': 'PostalAddress',
-        streetAddress: '陶器北845-7',
-        addressLocality: '堺市中区',
-        addressRegion: '大阪府',
-        postalCode: '599-8242',
-        addressCountry: 'JP',
-      },
       areaServed: [
         { '@type': 'City', name: '堺市' },
         { '@type': 'AdministrativeArea', name: '大阪府' },
@@ -175,6 +167,10 @@ export default function RootLayout({
   return (
     <html lang="ja" className="bg-background">
       <body className={`${notoSansJP.variable} ${bebasNeue.variable} ${alfaSlab.variable} font-sans antialiased`}>
+        {/* JS が動かない環境では、スクロールで現れる要素を最初から見せる */}
+        <noscript>
+          <style>{'.reveal{opacity:1;transform:none;transition:none}'}</style>
+        </noscript>
         <SmoothScrollProvider>{children}</SmoothScrollProvider>
         <MobileCallBar />
         <RevealObserver />

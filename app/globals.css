@@ -331,8 +331,7 @@
   opacity: 1;
   transform: none;
 }
-.motion-stopped .reveal,
-.no-js .reveal {
+.motion-stopped .reveal {
   opacity: 1;
   transform: none;
   transition: none;

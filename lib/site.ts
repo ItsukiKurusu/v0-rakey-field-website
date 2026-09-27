@@ -9,8 +9,8 @@ export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://v0-rakey-f
 
 export const SITE = {
   name: "RAKEY FIELD",
-  tagline: "地域の人々のカーライフを、一生涯サポートします。",
-  tel: { display: "072-339-4549", href: "tel:0723394549" },
+  tagline: "堺市を中心に全国の人々のカーライフを、一生涯サポートします。",
+  tel: { display: "072-339-4549", href: "tel:0723394549", intl: "+81-72-339-4549" },
   mobile: { display: "090-1893-0467", href: "tel:09018930467" },
   fax: "072-339-4551",
   email: "haegiwa.com@icloud.com",
@@ -19,11 +19,28 @@ export const SITE = {
   address: {
     postal: "〒599-8242",
     full: "大阪府堺市中区陶器北845-7",
+    postalCode: "599-8242",
+    region: "大阪府",
+    locality: "堺市中区",
+    street: "陶器北845-7",
     mapUrl: "https://www.google.com/maps/search/?api=1&query=%E5%A4%A7%E9%98%AA%E5%BA%9C%E5%A0%BA%E5%B8%82%E4%B8%AD%E5%8C%BA%E9%99%B6%E5%99%A8%E5%8C%97845-7",
   },
   representative: "清水 健",
   licenses: ["古物商許可", "レンタカー事業者証明書", "損害保険募集人資格"],
 } as const
+
+/** 構造化データ（JSON-LD）で共通に使う電話と住所 */
+export const LD_CONTACT = {
+  telephone: SITE.tel.intl,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: SITE.address.street,
+    addressLocality: SITE.address.locality,
+    addressRegion: SITE.address.region,
+    postalCode: SITE.address.postalCode,
+    addressCountry: "JP",
+  },
+}
 
 /** 5つのサービス（トップの看板・ヘッダーのメニュー・フッターで共通） */
 export const SERVICES = [

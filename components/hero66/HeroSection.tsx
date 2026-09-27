@@ -7,6 +7,7 @@ import { useCallback, useEffect, useState } from "react"
 import { Phone } from "lucide-react"
 import { useMotionState } from "@/components/motion-state"
 import { HERO_LINES } from "@/lib/heroLines"
+import { SITE } from "@/lib/site"
 
 // 準備が長引いても、ここまで待ったらスクロールを返す（通信が極端に遅い・どこかで止まった場合の保険）
 const LOCK_TIMEOUT_MS = 12000
@@ -88,11 +89,11 @@ export function HeroSection() {
       {/* 最後の幕で出る問い合わせ */}
       <div className="hero-cta absolute inset-x-0 bottom-10 z-10 flex flex-wrap gap-3 px-5 md:bottom-16 md:left-16 md:right-auto md:px-0">
         <a
-          href="tel:0723394549"
+          href={SITE.tel.href}
           className="inline-flex items-center gap-2 rounded-full bg-[#b5402a] px-6 py-3 font-bold shadow-lg shadow-black/30 transition-colors hover:bg-[#c94c33] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
         >
           <Phone className="h-4 w-4" aria-hidden="true" />
-          072-339-4549
+          {SITE.tel.display}
         </a>
         <a
           href="#contact"
