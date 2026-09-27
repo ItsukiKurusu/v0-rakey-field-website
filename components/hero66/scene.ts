@@ -242,6 +242,10 @@ export async function createHeroScene(
       if (!mesh.isMesh) return
       for (const m of Array.isArray(mesh.material) ? mesh.material : [mesh.material]) {
         for (const v of Object.values(m)) if ((v as THREE.Texture)?.isTexture) textures.add(v as THREE.Texture)
+        // onBeforeCompile で足した uniform の画像（地面の凹凸・ノイズなど）はマテリアルの項目に出てこない。
+        // コンパイル後の uniform から拾わないと、最初の1枚を描くときにまとめて転送されて止まる
+        const uniforms = (renderer.properties.get(m) as { uniforms?: Record<string, { value: unknown }> }).uniforms
+        if (uniforms) for (const u of Object.values(uniforms)) if ((u?.value as THREE.Texture)?.isTexture) textures.add(u.value as THREE.Texture)
       }
     })
     for (const t of textures) {

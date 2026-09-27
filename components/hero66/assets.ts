@@ -7,8 +7,8 @@ import { HDRLoader } from "three/addons/loaders/HDRLoader.js"
 import { MeshoptDecoder } from "three/addons/libs/meshopt_decoder.module.js"
 import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js"
 import { createGarageModel, type GarageModel } from "@/components/garage3d/createGarage"
+import { HERO_ASSET_BASE as BASE, HERO_META } from "./assetUrls"
 
-const BASE = "/hero66/"
 
 type SkyMeta = {
   band: string
@@ -81,7 +81,8 @@ export async function loadHeroAssets(
   renderer: THREE.WebGLRenderer,
   onProgress?: (fraction: number) => void,
 ): Promise<HeroAssets> {
-  const meta: Meta = await fetch(BASE + "meta.json").then((r) => r.json())
+  // JSON の取り込みでは horizon が number[] になるので、形は Meta として扱う
+  const meta = HERO_META as unknown as Meta
   const manager = new THREE.LoadingManager()
   manager.onProgress = (_url, loaded, total) => onProgress?.(loaded / total)
   const texLoader = new THREE.TextureLoader(manager)
@@ -125,7 +126,10 @@ export async function loadHeroAssets(
     return heightMap ? { map, normalMap, armMap, heightMap } : { map, normalMap, armMap }
   }
 
-  const [sunset, dusk, ground, road, groundRocks, shoulder, concrete, noise, rockGltf, grassGltf, grassAlpha, shrubGltf] =
+  // ガレージの前の土間は、ひび割れたコンクリートの実写で。
+  // ガレージの写真は、ほかの素材と同時に読み始める（全部そろってから始めると、その分だけ遅れる）
+  const concreteLoad = loadSurface(meta.concrete)
+  const [sunset, dusk, ground, road, groundRocks, shoulder, concrete, noise, rockGltf, grassGltf, grassAlpha, shrubGltf, garage] =
     await Promise.all([
       loadSky(meta.sky.sunset),
       loadSky(meta.sky.dusk),
@@ -133,15 +137,14 @@ export async function loadHeroAssets(
       loadSurface(meta.road),
       loadSurface(meta.groundRocks),
       loadSurface(meta.shoulder),
-      loadSurface(meta.concrete),
+      concreteLoad,
       loadTex(meta.noise, false),
       gltfLoader.loadAsync(BASE + meta.rock),
       gltfLoader.loadAsync(BASE + meta.foliage.grass),
       loadTex(meta.foliage.grassAlpha, false),
       gltfLoader.loadAsync(BASE + meta.foliage.shrub),
+      createGarageModel({ concrete: concreteLoad }),
     ])
-  // ガレージの前の土間は、ひび割れたコンクリートの実写で
-  const garage = await createGarageModel({ concrete })
 
   /** glTF の中のメッシュを、それぞれ「地面に底をそろえた形」にして取り出す */
   const meshesOf = (root: THREE.Object3D) => {

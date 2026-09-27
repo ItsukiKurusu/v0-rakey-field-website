@@ -4,20 +4,29 @@
 // 3D の本体は dynamic import（ssr: false）で、トップ以外のページの JS を増やさない。
 import dynamic from "next/dynamic"
 import { useCallback, useEffect, useState } from "react"
+import { preload } from "react-dom"
 import { Phone } from "lucide-react"
 import { useMotionState } from "@/components/motion-state"
 import { HERO_LINES } from "@/lib/heroLines"
 import { SITE } from "@/lib/site"
+import { HERO_FETCH_URLS, HERO_IMAGE_URLS } from "./assetUrls"
 
 // 準備が長引いても、ここまで待ったらスクロールを返す（通信が極端に遅い・どこかで止まった場合の保険）
 const LOCK_TIMEOUT_MS = 12000
 
 const HeroCanvas = dynamic(() => import("./HeroCanvas"), { ssr: false })
+// 3D のプログラムは、画面の準備（hydration）を待たずに読み始める。同じ import なので二重には取らない
+if (typeof window !== "undefined") void import("./HeroCanvas")
 
 export function HeroSection() {
   const [ready, setReady] = useState(false)
   const [loaded, setLoaded] = useState(0)
   const { motionStopped, setScrollLocked } = useMotionState()
+
+  // 素材の先読み：HTML の <head> に <link rel="preload"> を出し、ページを開いた直後からダウンロードを始める。
+  // three（TextureLoader / FileLoader）の読み方と crossOrigin をそろえないと、同じ物を二度取ってしまう
+  for (const href of HERO_IMAGE_URLS) preload(href, { as: "image", crossOrigin: "anonymous", fetchPriority: "low" })
+  for (const href of HERO_FETCH_URLS) preload(href, { as: "fetch", crossOrigin: "anonymous", fetchPriority: "low" })
 
   // 3D の準備中はスクロールを止める。止めないと、待っている間のスクロールで
   // 準備ができた瞬間に物語の途中から始まってしまう。

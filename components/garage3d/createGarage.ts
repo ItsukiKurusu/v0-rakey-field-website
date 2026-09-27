@@ -11,6 +11,8 @@
 import * as THREE from "three"
 import { GARAGE_COLORS as C, GARAGE_SPEC as S, WALL_SIGNS } from "./spec"
 import { concreteTexture, plywoodTexture, roofTexture, slatNormal, wallNormal, wallTexture } from "./textures"
+// 写真の一覧はビルド時に取り込む（実行時に取りに行くと、写真の読み込みがその1往復ぶん遅れる）
+import GARAGE_META from "@/public/garage3d/meta.json"
 
 type TexMeta = Record<string, { file: string; aspect: number; alpha: boolean }>
 
@@ -19,20 +21,25 @@ export type GarageModel = Awaited<ReturnType<typeof createGarageModel>>
 type Surface = { map: THREE.Texture; normalMap: THREE.Texture; armMap: THREE.Texture }
 
 /**
- * @param concrete 入口前の土間に使う実写のコンクリート（無ければ canvas の土間）
+ * @param concrete 入口前の土間に使う実写のコンクリート（無ければ canvas の土間）。
+ *   読み込み中の Promise でもよい（写真の読み込みと並べて待つ）
  */
-export async function createGarageModel({ base = "/garage3d/", concrete }: { base?: string; concrete?: Surface } = {}) {
-  const meta: TexMeta = await fetch(base + "meta.json").then((r) => r.json())
+export async function createGarageModel({
+  base = "/garage3d/",
+  concrete: concreteIn,
+}: { base?: string; concrete?: Surface | Promise<Surface> } = {}) {
+  const meta: TexMeta = GARAGE_META
   const loader = new THREE.TextureLoader()
   const photos: Record<string, THREE.Texture> = {}
-  await Promise.all(
-    Object.entries(meta).map(async ([k, v]) => {
+  const [concrete] = await Promise.all([
+    concreteIn,
+    ...Object.entries(meta).map(async ([k, v]) => {
       const t = await loader.loadAsync(base + v.file)
       t.colorSpace = THREE.SRGBColorSpace
       t.anisotropy = 8
       photos[k] = t
     }),
-  )
+  ])
 
   const disposables: Array<{ dispose: () => void }> = []
   const keep = <T extends { dispose: () => void }>(x: T) => (disposables.push(x), x)
