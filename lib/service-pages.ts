@@ -153,7 +153,7 @@ export const SERVICE_PAGES: Record<ServicePageData["slug"], ServicePageData> = {
     title: "車検・整備・板金塗装",
     catch: "交通事故の対応も、お任せください。",
     lead: "定期点検から車検、板金修理まで。お車のメンテナンスは、まるごとお任せください。お見積りは無料です。",
-    heroImage: "/images/garage-1.jpg",
+    heroImage: "/images/garage_new_20261008.jpg",
     heroAlt: "RAKEY FIELD のガレージの中",
     intro: {
       title: "お車のことなら、なんでも。",

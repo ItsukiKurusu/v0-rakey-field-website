@@ -926,6 +926,288 @@ export const blogPosts: BlogPost[] = [
       },
     ],
   },
+  {
+    slug: "cresson-journey-shikoku-kagawa-kochi-okayama",
+    category: "camping-car",
+    categoryLabel: "キャンピングカー",
+    title:
+      "キャンピングカーで四国へ。香川のうどん・高知の桂浜とカツオのたたき・岡山の美観地区を巡る、クレソンジャーニー旅行記",
+    description:
+      "ナッツRVのキャンピングカー「クレソンジャーニー」で、夜に出発して四国へ。淡路SAで仮眠、香川の「よしや」でうどん、高知の桂浜と桂浜水族館、かつお船でカツオのたたき焼き体験、RVパーク「道の駅たからだの里さいた」で車中泊、帰りに岡山・倉敷美観地区へ。車中泊で巡った旅の記録です。",
+    keywords: [
+      "キャンピングカー",
+      "クレソンジャーニー",
+      "車中泊",
+      "キャンピングカー 四国",
+      "淡路SA 車中泊",
+      "香川 うどん よしや",
+      "桂浜",
+      "桂浜水族館",
+      "かつお船 たたき体験",
+      "RVパーク 道の駅たからだの里さいた",
+      "倉敷美観地区",
+    ],
+    excerpt:
+      "夜に大阪を出て、淡路島で仮眠。朝は香川でうどん、昼は高知の桂浜で海を眺め、夜は自分で焼いたカツオのたたき。帰りは瀬戸大橋を渡って倉敷の美観地区へ。クレソンジャーニーで四国をぐるりと回ってきました。",
+    heroImage: "/images/kagawa_kouchi_okayama/yoshiya-udon.jpg",
+    publishedAt: "2026-10-08",
+    content: [
+      {
+        type: "image",
+        src: "/images/kagawa_kouchi_okayama/yoshiya-udon.jpg",
+        alt: "「純手打うどん よしや」の大きな看板の下に停まるクレソンジャーニー",
+        width: 1477,
+        height: 1108,
+      },
+      {
+        type: "paragraph",
+        text: "今回の行き先は四国です。",
+      },
+      {
+        type: "paragraph",
+        text: "大阪から淡路島を渡れば、四国は意外とすぐそこ。香川でうどんを食べて、高知で海とカツオを味わって、帰りは瀬戸大橋を渡って岡山へ。夜に出発して車中泊で繋ぐ、キャンピングカーならではの「欲張りルート」で回ってきました。",
+      },
+      {
+        type: "table",
+        headers: ["日程", "行き先"],
+        rows: [
+          ["1日目（夜）", "大阪を出発 → 淡路SAで仮眠"],
+          ["2日目", "香川「よしや」でうどん → 高知・桂浜、桂浜水族館 → かつお船でたたき体験 → RVパーク 道の駅たからだの里さいたで車中泊"],
+          ["3日目", "瀬戸大橋 → 岡山・倉敷美観地区 → 帰宅"],
+        ],
+      },
+      {
+        type: "heading",
+        level: 2,
+        text: "1日目：夜に出発して、淡路SAで仮眠",
+      },
+      {
+        type: "paragraph",
+        text: "旅のスタートは夜。明石海峡大橋を渡って、まずは淡路島のサービスエリアを目指しました。",
+      },
+      {
+        type: "image",
+        src: "/images/kagawa_kouchi_okayama/awaji-sa-night.jpg",
+        alt: "夜の淡路SAの駐車場に停まるクレソンジャーニーと、ライトアップされた大観覧車",
+        width: 1477,
+        height: 1108,
+      },
+      {
+        type: "paragraph",
+        text: "大きな観覧車が目印の淡路SA。夜の駐車場にクレソンを停めて、この日はここで仮眠です。**夜のうちに距離を稼いでおけば、翌朝はいきなり目的地からスタートできる**。移動時間を寝る時間に変えられるのが、キャンピングカー旅のいちばんのずるいところだと思っています。",
+      },
+      {
+        type: "heading",
+        level: 2,
+        text: "2日目の朝：香川で、まずはうどん",
+      },
+      {
+        type: "paragraph",
+        text: "目が覚めたら、そのまま香川へ。うどん県に来たからには、朝ごはんはうどん一択です。向かったのは、地元でも有名な「純手打うどん よしや」。",
+      },
+      {
+        type: "paragraph",
+        text: "大きな看板の下にクレソンを停めて、いざお店へ。コシのある手打ちの麺を朝からすするのは、なんとも言えない贅沢です。全長5m以下のクレソンなら、こうした郊外のお店の駐車場にも停めやすいのが助かります。",
+      },
+      {
+        type: "heading",
+        level: 2,
+        text: "高知・桂浜へ",
+      },
+      {
+        type: "paragraph",
+        text: "お腹を満たしたら、四国を縦断して高知へ。目指すは太平洋に面した名勝・桂浜です。",
+      },
+      {
+        type: "image",
+        src: "/images/kagawa_kouchi_okayama/katsurahama.jpg",
+        alt: "「桂浜」と刻まれた石碑と、松の木越しに見える太平洋と弓なりの砂浜",
+        width: 1477,
+        height: 1108,
+      },
+      {
+        type: "paragraph",
+        text: "「桂浜」の石碑の向こうに、弓なりの砂浜と太平洋。少し雲の多い日でしたが、松林越しに見る海はやっぱり雄大でした。",
+      },
+      {
+        type: "image",
+        src: "/images/kagawa_kouchi_okayama/sakamoto-ryoma-statue.jpg",
+        alt: "桂浜に立つ坂本龍馬像を見上げたところ",
+        width: 1108,
+        height: 1477,
+      },
+      {
+        type: "paragraph",
+        text: "桂浜といえば、もちろん坂本龍馬像。台座から見上げると想像以上に大きく、太平洋の方を向いて立つ姿に思わず背筋が伸びます。",
+      },
+      {
+        type: "heading",
+        level: 3,
+        text: "桂浜水族館",
+      },
+      {
+        type: "paragraph",
+        text: "続いて、浜のすぐそばにある桂浜水族館へ。こぢんまりとした水族館ですが、生き物との距離がとにかく近いのが魅力です。",
+      },
+      {
+        type: "image",
+        src: "/images/kagawa_kouchi_okayama/katsurahama-aquarium-turtles.jpg",
+        alt: "桂浜水族館で、水槽のふちに集まってくるたくさんのウミガメ",
+        width: 1477,
+        height: 1108,
+      },
+      {
+        type: "paragraph",
+        text: "水槽のふちに、ウミガメたちがわらわらと集まってきます。こんなに近くでウミガメの顔を見たのは初めてかもしれません。子どもたちも身を乗り出して見入っていました。",
+      },
+      {
+        type: "image",
+        src: "/images/kagawa_kouchi_okayama/katsurahama-aquarium-sealion.jpg",
+        alt: "プールの岩の上で胸を張ってポーズを決めるアシカ",
+        width: 1477,
+        height: 1108,
+      },
+      {
+        type: "paragraph",
+        text: "岩の上で胸を張って、見事なポーズを決めてくれたアシカ。完全にカメラ目線…ではなく空を見ていますが、それもまた良し。",
+      },
+      {
+        type: "heading",
+        level: 3,
+        text: "かつお船で、カツオのたたきを自分で焼く",
+      },
+      {
+        type: "paragraph",
+        text: "高知に来たら、やっぱりカツオ。立ち寄ったのは「かつお船」です。",
+      },
+      {
+        type: "image",
+        src: "/images/kagawa_kouchi_okayama/katsuobune.jpg",
+        alt: "船の形をした白い建物に「かつお船」の文字と、壁に描かれたカツオの絵",
+        width: 1477,
+        height: 1108,
+      },
+      {
+        type: "paragraph",
+        text: "建物そのものが船の形をしていて、壁にはカツオの群れの絵。見た目からして期待が高まります。ここでは、**藁焼きでカツオのたたきを自分で焼く体験**ができるんです。",
+      },
+      {
+        type: "image",
+        src: "/images/kagawa_kouchi_okayama/katsuobune-tataki.jpg",
+        alt: "勢いよく燃える藁の炎で、子どもたちがカツオのたたきを焼いているところ",
+        width: 1477,
+        height: 1108,
+      },
+      {
+        type: "paragraph",
+        text: "藁に火がつくと、一気に炎が立ち上がって熱気がすごい！長い串を持った子どもたちも、最初はおっかなびっくりでしたが、スタッフさんに教わりながら上手に焼き上げてくれました。表面は香ばしく、中はしっとり。自分たちで焼いたたたきの味は、きっと忘れられない思い出になったはずです。",
+      },
+      {
+        type: "heading",
+        level: 3,
+        text: "夜は香川に戻って、RVパークで車中泊",
+      },
+      {
+        type: "paragraph",
+        text: "お腹も心も満たされたところで、香川方面へ引き返します。この日の寝床は「RVパーク 道の駅たからだの里さいた」。",
+      },
+      {
+        type: "paragraph",
+        text: "RVパークは、キャンピングカーや車中泊のために用意された有料の駐車スペースです。道の駅に併設されているので、トイレや買い物にも困りません。**「ここで泊まっていいですよ」と決められた場所で、気兼ねなく眠れる**のは、やっぱり安心感が違います。",
+      },
+      {
+        type: "heading",
+        level: 2,
+        text: "3日目：瀬戸大橋を渡って、岡山・倉敷へ",
+      },
+      {
+        type: "paragraph",
+        text: "最終日は、帰り道に寄り道をしながら。香川から瀬戸大橋を渡って、岡山へ向かいます。",
+      },
+      {
+        type: "image",
+        src: "/images/kagawa_kouchi_okayama/seto-ohashi.jpg",
+        alt: "頭上に架かる瀬戸大橋と、その下の駐車場に停まるクレソンジャーニー",
+        width: 1477,
+        height: 1108,
+      },
+      {
+        type: "paragraph",
+        text: "途中で休憩がてら、瀬戸大橋のふもとへ。真下から見上げる橋は、とにかく巨大です。上が道路、下が鉄道の二段構造になっていて、クレソンがミニカーのように見えました。",
+      },
+      {
+        type: "image",
+        src: "/images/kagawa_kouchi_okayama/seto-ohashi-wataru.jpg",
+        alt: "瀬戸大橋を背に立つ、頭に赤い車を乗せたキャラクター「わたる」のカメラ台",
+        width: 1477,
+        height: 1108,
+      },
+      {
+        type: "paragraph",
+        text: "頭に赤い車を乗せた「わたる」くんのカメラ台も発見。カメラを頭に乗せて記念撮影ができる、なんとも気の利いたキャラクターです。",
+      },
+      {
+        type: "heading",
+        level: 3,
+        text: "倉敷美観地区をぶらり",
+      },
+      {
+        type: "image",
+        src: "/images/kagawa_kouchi_okayama/kurashiki-bikan1.jpg",
+        alt: "柳の木と石橋、人力車が並ぶ倉敷美観地区の倉敷川沿い",
+        width: 1477,
+        height: 1108,
+      },
+      {
+        type: "paragraph",
+        text: "旅の締めくくりは、倉敷美観地区。倉敷川に沿って柳の並木と白壁の蔵が続き、石橋の上を人が行き交う、絵になる町並みです。",
+      },
+      {
+        type: "image",
+        src: "/images/kagawa_kouchi_okayama/kurashiki-bikan2.jpg",
+        alt: "雨の倉敷川。水面に柳と白壁の建物が映り込んでいる",
+        width: 1477,
+        height: 1108,
+      },
+      {
+        type: "paragraph",
+        text: "この日はぽつぽつと小雨。でも、雨の美観地区もまた風情があります。水面に柳と白壁が映り込んで、晴れの日とはまた違った落ち着いた景色でした。",
+      },
+      {
+        type: "image",
+        src: "/images/kagawa_kouchi_okayama/kurashiki-bikan-momoko.jpg",
+        alt: "なまこ壁の町家に、ピンクの丸いロゴののれんが掛かる「くらしき桃子」の店先",
+        width: 1477,
+        height: 1108,
+      },
+      {
+        type: "paragraph",
+        text: "なまこ壁の町家が並ぶ通りを歩いていると、桃のスイーツで有名な「くらしき桃子」の店先に子どもたちが吸い寄せられていきました。岡山といえば、やっぱり桃です。",
+      },
+      {
+        type: "heading",
+        level: 2,
+        text: "四国を回ってみて",
+      },
+      {
+        type: "paragraph",
+        text: "香川、高知、そして岡山。振り返ると、うどんにカツオに桃と、ずっと何かを食べていた気がします（笑）。夜のうちに移動して、朝から目いっぱい遊ぶ。キャンピングカーだからこそできた、ぎゅっと詰まった旅になりました。",
+      },
+      {
+        type: "list",
+        items: [
+          "夜に出発してSAで仮眠すれば、朝からフル稼働できる",
+          "郊外の人気店も、全長5m以下のクレソンなら駐車しやすい",
+          "RVパークを使えば、車中泊の場所選びに迷わない",
+          "帰り道の寄り道も、宿のチェックアウトを気にせず自由に",
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "四国は、大阪・堺からなら思い立ったらすぐ行ける距離。次はどの県のどんな名物を食べに行こうか、もう作戦会議が始まっています。",
+      },
+    ],
+  },
 ]
 
 export function getBlogPost(slug: string): BlogPost | undefined {

@@ -3,7 +3,7 @@ import { SITE } from "@/lib/site"
 import { SectionHeading } from "./SectionHeading"
 
 const PHOTOS = [
-  { src: "/images/S__7413768_0.jpg", alt: "看板と雑貨が並ぶガレージの中", caption: "THE GARAGE", rotate: -4, className: "left-0 top-6 w-[62%] md:w-[58%]" },
+  { src: "/images/garage_new_20261008.jpg", alt: "ソファとショーケース、看板や雑貨が並ぶガレージの中", caption: "THE GARAGE", rotate: -4, className: "left-0 top-6 w-[62%] md:w-[58%]" },
   { src: "/images/c8e91041-abe4-41d1-9b89.jpeg", alt: "人工芝の駐車場とフェンス", caption: "OUR LOT", rotate: 5, className: "right-0 top-0 w-[48%] md:w-[46%]" },
   { src: "/images/impala.jpg", alt: "インパラ SS のボディの文字", caption: "IMPALA SS", rotate: -2, className: "right-[6%] bottom-0 w-[54%] md:w-[50%]" },
 ]
