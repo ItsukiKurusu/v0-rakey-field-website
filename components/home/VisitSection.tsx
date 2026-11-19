@@ -1,3 +1,4 @@
+import { Phrase } from "@/components/shared/Phrase"
 import Image from "next/image"
 import { MapPin } from "lucide-react"
 import { SITE } from "@/lib/site"
@@ -14,9 +15,11 @@ export function VisitSection() {
             VISIT US
           </p>
           <h2 className="mt-5 text-[1.9rem] font-black leading-[1.4] text-ink md:text-[2.4rem]">
-            ガレージへ、
-            <br />
-            気軽にどうぞ。
+            <Phrase>
+              ガレージへ、
+              <br />
+              気軽にどうぞ。
+            </Phrase>
           </h2>
           <p className="mt-5 text-[0.95rem] leading-loose text-ink/75">
             アメリカンヴィンテージに囲まれた、小さなガレージです。車の相談がなくても、雑貨を見に立ち寄ってください。

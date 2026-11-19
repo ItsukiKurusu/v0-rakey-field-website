@@ -1,5 +1,6 @@
 "use client"
 
+import { Phrase } from "@/components/shared/Phrase"
 import Image from "next/image"
 import Link from "next/link"
 import { useState } from "react"
@@ -58,7 +59,7 @@ export function BlogList({ posts }: { posts: BlogCard[] }) {
                 {fmt(first.publishedAt)}
               </time>
             </p>
-            <h2 className="mt-4 text-xl font-black leading-snug text-ink md:text-2xl">{first.title}</h2>
+            <h2 className="mt-4 text-xl font-black leading-snug text-ink md:text-2xl"><Phrase>{first.title}</Phrase></h2>
             <p className="mt-4 line-clamp-3 text-sm leading-[1.9] text-ink/70">{first.excerpt}</p>
             <span className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-rust">
               続きを読む
@@ -84,7 +85,7 @@ export function BlogList({ posts }: { posts: BlogCard[] }) {
                   <time dateTime={p.publishedAt} className="font-display text-sm tracking-[0.2em] text-ink/55">
                     {fmt(p.publishedAt)}
                   </time>
-                  <h2 className="mt-2 line-clamp-2 font-bold leading-relaxed text-ink">{p.title}</h2>
+                  <h2 className="mt-2 line-clamp-2 font-bold leading-relaxed text-ink"><Phrase>{p.title}</Phrase></h2>
                   <p className="mt-2 line-clamp-2 flex-1 text-sm leading-relaxed text-ink/65">{p.excerpt}</p>
                 </div>
               </Link>

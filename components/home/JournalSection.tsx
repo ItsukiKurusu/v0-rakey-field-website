@@ -1,3 +1,4 @@
+import { Phrase } from "@/components/shared/Phrase"
 import Image from "next/image"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
@@ -31,7 +32,7 @@ export function JournalSection() {
                   <time dateTime={p.publishedAt} className="font-display text-sm tracking-[0.2em] text-ink/55">
                     {fmt(p.publishedAt)}
                   </time>
-                  <h3 className="mt-2 line-clamp-2 font-bold leading-relaxed text-ink">{p.title}</h3>
+                  <h3 className="mt-2 line-clamp-2 font-bold leading-relaxed text-ink"><Phrase>{p.title}</Phrase></h3>
                 </div>
               </Link>
             </li>

@@ -134,6 +134,17 @@
   }
   body {
     @apply bg-background text-foreground;
+    /* 小さい「ゃ」「ー」などが行の先頭に来ないようにする */
+    line-break: strict;
+  }
+  /* 文章の最後の行に「す。」「い。」だけが1〜2文字ぽつんと残らないようにする。
+     見出しの文節単位の折り返しは components/shared/Phrase.tsx で行う */
+  p,
+  li,
+  dd,
+  td,
+  figcaption {
+    text-wrap: pretty;
   }
 }
 

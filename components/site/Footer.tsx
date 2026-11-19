@@ -1,3 +1,4 @@
+import { Phrase } from "@/components/shared/Phrase"
 import Image from "next/image"
 import Link from "next/link"
 import { SERVICES, SITE } from "@/lib/site"
@@ -25,7 +26,7 @@ export function Footer() {
             </span>
             <span className="font-display text-4xl leading-none tracking-wide">RAKEY FIELD</span>
           </Link>
-          <p className="mt-5 text-sm leading-relaxed text-paper/70">{SITE.tagline}</p>
+          <p className="mt-5 text-sm leading-relaxed text-paper/70"><Phrase>{SITE.tagline}</Phrase></p>
           <address className="mt-6 space-y-1 text-sm not-italic text-paper/80">
             <p>
               {SITE.address.postal} {SITE.address.full}

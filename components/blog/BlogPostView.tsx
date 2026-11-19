@@ -1,3 +1,4 @@
+import { Phrase } from "@/components/shared/Phrase"
 import Image from "next/image"
 import Link from "next/link"
 import { ArrowLeft, ArrowRight } from "lucide-react"
@@ -48,7 +49,7 @@ export function BlogPostView({ post }: { post: BlogPost }) {
                 </span>
               )}
             </p>
-            <h1 className="mt-5 text-[1.75rem] font-black leading-[1.45] md:text-[2.6rem]">{post.title}</h1>
+            <h1 className="mt-5 text-[1.75rem] font-black leading-[1.45] md:text-[2.6rem]"><Phrase>{post.title}</Phrase></h1>
           </div>
         </section>
 
@@ -91,7 +92,7 @@ export function BlogPostView({ post }: { post: BlogPost }) {
                           <time dateTime={p.publishedAt} className="font-display text-sm tracking-[0.2em] text-ink/55">
                             {fmt(p.publishedAt)}
                           </time>
-                          <h2 className="mt-2 line-clamp-2 font-bold leading-relaxed text-ink">{p.title}</h2>
+                          <h2 className="mt-2 line-clamp-2 font-bold leading-relaxed text-ink"><Phrase>{p.title}</Phrase></h2>
                           <span className="mt-3 inline-flex items-center gap-1 text-sm font-bold text-rust">
                             読む
                             <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" aria-hidden="true" />

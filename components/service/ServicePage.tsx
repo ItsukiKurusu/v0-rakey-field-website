@@ -1,3 +1,4 @@
+import { Phrase } from "@/components/shared/Phrase"
 import Image from "next/image"
 import Link from "next/link"
 import { ArrowRight, Phone } from "lucide-react"
@@ -61,9 +62,9 @@ export function ServicePage({ data }: { data: ServicePageData }) {
               <p className="mile mt-10 text-mustard" data-no={meta.no}>
                 {meta.en}
               </p>
-              <h1 className="mt-5 text-[2.5rem] font-black leading-[1.2] tracking-tight md:text-6xl">{data.title}</h1>
-              <p className="mt-5 text-lg font-bold leading-relaxed text-mustard md:text-2xl">{data.catch}</p>
-              <p className="mt-5 max-w-xl text-[0.95rem] leading-[2] text-paper/75 md:text-base">{data.lead}</p>
+              <h1 className="mt-5 text-[2.5rem] font-black leading-[1.2] tracking-tight md:text-6xl"><Phrase>{data.title}</Phrase></h1>
+              <p className="mt-5 text-lg font-bold leading-relaxed text-mustard md:text-2xl"><Phrase>{data.catch}</Phrase></p>
+              <p className="mt-5 max-w-xl text-[0.95rem] leading-[2] text-paper/75 md:text-base"><Phrase>{data.lead}</Phrase></p>
               <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
                 <a
                   href={SITE.tel.href}
@@ -141,8 +142,8 @@ export function ServicePage({ data }: { data: ServicePageData }) {
                   >
                     <span className={`font-slab text-4xl leading-none ${tone.text}`}>{String(i + 1).padStart(2, "0")}</span>
                     <div>
-                      <h3 className="text-lg font-black text-ink">{m.title}</h3>
-                      <p className="mt-2 text-sm leading-[1.9] text-ink/75">{m.text}</p>
+                      <h3 className="text-lg font-black text-ink"><Phrase>{m.title}</Phrase></h3>
+                      <p className="mt-2 text-sm leading-[1.9] text-ink/75"><Phrase>{m.text}</Phrase></p>
                     </div>
                   </li>
                 ))}
@@ -206,8 +207,8 @@ export function ServicePage({ data }: { data: ServicePageData }) {
                     {i + 1}
                   </span>
                   <div className="md:mt-6">
-                    <h3 className="text-lg font-black">{f.title}</h3>
-                    <p className="mt-2 text-sm leading-[1.9] text-paper/70">{f.text}</p>
+                    <h3 className="text-lg font-black"><Phrase>{f.title}</Phrase></h3>
+                    <p className="mt-2 text-sm leading-[1.9] text-paper/70"><Phrase>{f.text}</Phrase></p>
                   </div>
                 </li>
               ))}

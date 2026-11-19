@@ -1,3 +1,4 @@
+import { Phrase } from "@/components/shared/Phrase"
 import Link from "next/link"
 import Image from "next/image"
 import { ArrowRight } from "lucide-react"
@@ -30,7 +31,7 @@ export function BlogContent({ blocks }: { blocks: BlogContentBlock[] }) {
                   : "text-xl font-black leading-snug md:text-[1.35rem] mt-10 flex items-center gap-2 before:h-2 before:w-2 before:shrink-0 before:rounded-full before:bg-rust"
               }
             >
-              {block.text}
+              <Phrase>{block.text}</Phrase>
             </Tag>
           )
         }
@@ -104,7 +105,7 @@ export function BlogContent({ blocks }: { blocks: BlogContentBlock[] }) {
                     <tr key={j} className="border-t border-ink/10 even:bg-paper-deep/40">
                       {row.map((cell, k) => (
                         <td key={k} className="px-4 py-3 text-ink/85">
-                          {cell}
+                          <Phrase>{cell}</Phrase>
                         </td>
                       ))}
                     </tr>

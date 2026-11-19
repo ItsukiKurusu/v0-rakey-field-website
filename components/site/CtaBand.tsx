@@ -1,3 +1,4 @@
+import { Phrase } from "@/components/shared/Phrase"
 import { Clock, MapPin, Phone } from "lucide-react"
 import { ContactButton } from "@/components/site/ContactButton"
 import type { InquiryType } from "@/lib/contact"
@@ -11,8 +12,8 @@ export function CtaBand({ title, text, type = "other" }: { title: string; text: 
       <div className="grid items-center gap-10 md:grid-cols-12">
         <div className="md:col-span-6">
           <p className="font-display text-sm tracking-[0.35em] text-mustard">ONE CALL, THAT&apos;S ALL</p>
-          <h2 className="mt-3 text-3xl font-black leading-tight md:text-4xl">{title}</h2>
-          <p className="mt-4 text-sm leading-[1.9] text-paper/75 md:text-base">{text}</p>
+          <h2 className="mt-3 text-3xl font-black leading-tight md:text-4xl"><Phrase>{title}</Phrase></h2>
+          <p className="mt-4 text-sm leading-[1.9] text-paper/75 md:text-base"><Phrase>{text}</Phrase></p>
           <ul className="mt-6 space-y-2 text-sm text-paper/80">
             <li className="flex items-center gap-2">
               <Clock className="h-4 w-4 text-mustard" aria-hidden="true" />

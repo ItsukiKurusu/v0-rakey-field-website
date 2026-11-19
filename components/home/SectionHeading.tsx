@@ -1,3 +1,5 @@
+import { Phrase } from "@/components/shared/Phrase"
+
 /** セクションの見出し：マイル標（番号）＋英字＋日本語の見出し */
 export function SectionHeading({
   no,
@@ -22,8 +24,8 @@ export function SectionHeading({
       <p className={`mile ${sub}`} data-no={no}>
         {en}
       </p>
-      <h2 className={`mt-5 text-[1.9rem] font-black leading-[1.4] tracking-wide md:text-[2.8rem] ${main}`}>{title}</h2>
-      {lead && <p className={`mt-5 max-w-xl text-[0.95rem] leading-loose md:text-base ${body} ${align === "center" ? "mx-auto" : ""}`}>{lead}</p>}
+      <h2 className={`mt-5 text-[1.9rem] font-black leading-[1.4] tracking-wide md:text-[2.8rem] ${main}`}><Phrase>{title}</Phrase></h2>
+      {lead && <p className={`mt-5 max-w-xl text-[0.95rem] leading-loose md:text-base ${body} ${align === "center" ? "mx-auto" : ""}`}><Phrase>{lead}</Phrase></p>}
     </div>
   )
 }

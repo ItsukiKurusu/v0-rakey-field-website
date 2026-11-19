@@ -1,3 +1,4 @@
+import { Phrase } from "@/components/shared/Phrase"
 import Image from "next/image"
 import Link from "next/link"
 import { ArrowRight, Phone } from "lucide-react"
@@ -53,8 +54,8 @@ export function ServicesSection() {
                 </div>
                 <div className="flex flex-1 flex-col px-2 pb-2 pt-5">
                   <p className="font-slab text-[1.7rem] leading-none tracking-wide md:text-[2rem]">{s.en}</p>
-                  <h3 className="mt-3 text-lg font-bold">{s.title}</h3>
-                  <p className="mt-2 flex-1 text-sm leading-relaxed opacity-85">{s.text}</p>
+                  <h3 className="mt-3 text-lg font-bold"><Phrase>{s.title}</Phrase></h3>
+                  <p className="mt-2 flex-1 text-sm leading-relaxed opacity-85"><Phrase>{s.text}</Phrase></p>
                   <span className="mt-5 inline-flex items-center gap-2 text-sm font-bold">
                     詳しく見る
                     <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />

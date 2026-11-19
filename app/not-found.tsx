@@ -1,3 +1,4 @@
+import { Phrase } from "@/components/shared/Phrase"
 import Link from "next/link"
 import type { Metadata } from "next"
 import { Header } from "@/components/site/Header"
@@ -23,7 +24,7 @@ export default function NotFound() {
             </div>
           </div>
           <p className="mt-10 font-display text-sm tracking-[0.35em] text-mustard">WRONG WAY</p>
-          <h1 className="mt-3 text-3xl font-black md:text-4xl">道に迷ってしまったようです。</h1>
+          <h1 className="mt-3 text-3xl font-black md:text-4xl"><Phrase>道に迷ってしまったようです。</Phrase></h1>
           <p className="mt-4 text-sm leading-[1.9] text-paper/70 md:text-base">
             お探しのページは、移動したか、なくなった可能性があります。
           </p>
